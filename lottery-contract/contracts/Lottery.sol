@@ -2,30 +2,27 @@
 
 pragma solidity ^0.8.0;
 
-contract Lottery {
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
+
+contract Lottery is Ownable {
+    uint256 private lotteryID = 0;
     address payable[] private participants;
+    uint256 private costPerTicket;
+    uint256 private prizePool;
     uint256 private startingTimestamp;
     uint256 private closingTimestamp;
-    uint256 private costPerTicket;
     address payable private winner;
-    uint256 private prizePool;
-
-    uint256 public lotteryID;
-
-    uint256 prizeAdmin;
-
     uint256 public randomResult;
 
-    address admin;
+    bool rewardClaimed = false;
 
     // represents the status of the lottery
     enum Status {
-        NOT_STARTED,
+        NOT_STARTED, // The lottery is not started yet
         OPEN, // The lottery is open for ticket purchases
         CLOSED, // The lottery is no longer open for ticket purchases
         COMPLETED // The lottery has been closed and the numbers drawn
     }
-
     Status private lotteryStatus = Status.NOT_STARTED;
 
     // all the needed information about a lottery
@@ -39,7 +36,6 @@ contract Lottery {
         address winner; // winner address
         uint256 randomNumber; // randomResult
     }
-
     // lottery ID's to info
     mapping(uint256 => LotteryInfo) public allLotteries;
 
@@ -63,12 +59,16 @@ contract Lottery {
         _;
     }
 
-    modifier onlyWinner() {
-        require(msg.sender == winner);
+    modifier onlyWinnerOrOwner() {
+        require(
+            msg.sender == winner || msg.sender == owner(),
+            "Only winner or owner can claim reward!"
+        );
         _;
     }
 
-    modifier onlyOwner() {
+    modifier notClaimed() {
+        require(!rewardClaimed, "Reward not claimed by winner!");
         _;
     }
 
@@ -77,7 +77,7 @@ contract Lottery {
     //     address _link,
     //     uint256 _fee,
     //     bytes32 _keyHash
-    // ) public VRFConsumerBase(_vrfCoordinator, _link) {
+    // ) public VRFConsumerBase(_vrfCoordinator, _link) Ownable {
     //     lotteryStatus = Status.Completed;
     //     linkFee = _fee;
     //     linkKeyHash = _keyHash;
@@ -132,14 +132,34 @@ contract Lottery {
     //     randomResult = randomness;
     // }
 
-    function claimReward() external ifCompleted onlyWinner {
-        // uint256 winnerPrize = 0.9 * prizePool; // 90% of the prizePool is for the winner
-        // winner.transfer(winnerPrize); // transfer prize to the winner
-        // prizePool -= winnerPrize;
+    function claimReward() external ifCompleted notClaimed onlyWinnerOrOwner {
+        uint256 winnerPrize = (prizePool * 9) / 10; // 90% of the prizePool is for the winner
+        transferPrize(winnerPrize);
+        rewardClaimed = true;
+        lotteryStatus = Status.NOT_STARTED;
+        addLotteryInfoAndReset();
     }
 
-    function notStareted() internal ifCompleted onlyOwner {
-        // lotteryStatus = Status.NOT_STARTED;
-        // admin.transfer(prizePool); // transfer 10% of the prizePool to the winner
+    function transferPrize(uint256 _winnerPrize) private {
+        prizePool -= _winnerPrize;
+        winner.transfer(_winnerPrize); // transfer the winnerPrize to the winner
+        owner().transfer(prizePool); // transfer 10% of the prizePool to the owner
+    }
+
+    // add lottery informations and reset
+    function addLotteryInfoAndReset() private {
+        LotteryInfo memory lottery = LotteryInfo(
+            lotteryID,
+            participants,
+            prizePool,
+            costPerTicket,
+            startingTimestamp,
+            closingTimestamp,
+            winner,
+            randomResult
+        );
+        allLotteries[lotteryID++] = lottery;
+        // emptify
+        participants = new address payable[](0);
     }
 }
