@@ -3,8 +3,9 @@
 pragma solidity ^0.8.0;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
+import "https://github.com/smartcontractkit/chainlink/blob/develop/contracts/src/v0.8/VRFConsumerBase.sol";
 
-contract Lottery is Ownable {
+contract Lottery is Ownable, VRFConsumerBase {
     uint256 private lotteryID = 0;
     address payable[] private participants;
     uint256 private costPerTicket;
@@ -15,6 +16,13 @@ contract Lottery is Ownable {
     uint256 public randomResult;
 
     bool rewardClaimed = false;
+
+    address linkToken;
+
+    uint8 public winnerPercentage; // % of the prizePool is for the winner
+    // oracle
+    bytes32 internal keyHash;
+    uint256 internal fee;
 
     // represents the status of the lottery
     enum Status {
@@ -72,16 +80,24 @@ contract Lottery is Ownable {
         _;
     }
 
-    // constructor(
-    //     address _vrfCoordinator,
-    //     address _link,
-    //     uint256 _fee,
-    //     bytes32 _keyHash
-    // ) public VRFConsumerBase(_vrfCoordinator, _link) Ownable {
-    //     lotteryStatus = Status.Completed;
-    //     linkFee = _fee;
-    //     linkKeyHash = _keyHash;
-    // }
+    event RequestedRandomness(bytes32 requestId);
+    event OpenedLottery(uint256 lotteryId);
+    event ClosedLottery(uint256 lotteryId);
+    event ClaimedReward(uint256 lotteryId);
+
+    constructor(
+        address _vrfCoordinator,
+        address _linkToken,
+        bytes32 _keyHash,
+        uint256 _fee,
+        uint8 _winnerPercentage
+    ) VRFConsumerBase(_vrfCoordinator, _linkToken) {
+        linkToken = _linkToken;
+        keyHash = _keyHash;
+        fee = _fee; // varies by network
+        winnerPercentage = _winnerPercentage;
+        lotteryStatus = Status.NOT_STARTED;
+    }
 
     function startLottery(uint256 _ticketPrice)
         external
@@ -91,6 +107,7 @@ contract Lottery is Ownable {
         costPerTicket = _ticketPrice;
         lotteryStatus = Status.OPEN;
         startingTimestamp = block.timestamp; // now
+        emit OpenedLottery(lotteryID);
     }
 
     function buyTicket() external payable ifOpen {
@@ -103,6 +120,7 @@ contract Lottery is Ownable {
     function closeLottery() external ifOpen onlyOwner {
         lotteryStatus = Status.CLOSED; // pending
         closingTimestamp = block.timestamp; // closing time
+        emit ClosedLottery(lotteryID);
     }
 
     function completeLottery() external ifClosed onlyOwner {
@@ -111,39 +129,46 @@ contract Lottery is Ownable {
     }
 
     function pickWinner() private ifCompleted {
+        bytes32 requestId = getRandomNumber();
+        emit RequestedRandomness(requestId);
         uint256 winnerIndex = randomResult % participants.length;
         winner = participants[winnerIndex];
     }
 
-    function requestRandomNumber() private {
-        // bytes32 requestId = requestRandomness(linkKeyHash, linkFee);
-        // emit RequestedRandomness(requestId);
+    /**
+     * Requests randomness
+     */
+    function getRandomNumber() private returns (bytes32 requestId) {
+        require(
+            linkToken.balanceOf(address(this)) >= fee,
+            "Not enough LINK - fill contract with faucet"
+        );
+        return requestRandomness(keyHash, fee);
     }
 
-    // /**
-    //  * Callback function used by VRF Coordinator
-    //  * recieve random number
-    //  */
-    // function fulfillRandomness(bytes32 requestId, uint256 randomness)
-    //     internal
-    //     override
-    // {
-    //     require(randomness > 0, "Random not found!");
-    //     randomResult = randomness;
-    // }
+    /**
+     * Callback function used by VRF Coordinator
+     */
+    function fulfillRandomness(bytes32 requestId, uint256 randomness)
+        internal
+        override
+    {
+        randomResult = randomness;
+    }
 
     function claimReward() external ifCompleted notClaimed onlyWinnerOrOwner {
-        uint256 winnerPrize = (prizePool * 9) / 10; // 90% of the prizePool is for the winner
+        uint256 winnerPrize = prizePool * (winnerPercentage / 100);
         transferPrize(winnerPrize);
         rewardClaimed = true;
         lotteryStatus = Status.NOT_STARTED;
         addLotteryInfoAndReset();
+        emit ClaimedReward(lotteryID);
     }
 
     function transferPrize(uint256 _winnerPrize) private {
         prizePool -= _winnerPrize;
         winner.transfer(_winnerPrize); // transfer the winnerPrize to the winner
-        owner().transfer(prizePool); // transfer 10% of the prizePool to the owner
+        owner().transfer(prizePool); // transfer the rest of the prizePool to the owner
     }
 
     // add lottery informations and reset
