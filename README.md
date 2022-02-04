@@ -1,1 +1,1 @@
-# lottery
+# DAPP-Z Lottery
