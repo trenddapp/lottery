@@ -9,6 +9,7 @@ const lightTheme = {
   modal: {
     colors: {
       overlay: "#6B7280",
+      hover: "#F9FAFB",
     },
   },
 };

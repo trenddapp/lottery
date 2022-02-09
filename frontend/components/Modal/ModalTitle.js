@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
-const ModalTitle = styled.h3`
+const ModalTitleStyled = styled.h3`
   color: ${({ theme }) => theme.colors.headline};
   font-weight: bold;
 `;
+
+const ModalTitle = ({ children }) => {
+  return <ModalTitleStyled>{children}</ModalTitleStyled>;
+};
 
 export default ModalTitle;
