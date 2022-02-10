@@ -1,8 +1,12 @@
 import Head from "next/head";
+import { Hero } from "../components/Hero";
+import { History } from "../components/History";
+import { Rules } from "../components/Rules";
+import { Terms } from "../components/Terms";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Head>
         <title>Lottery | dapp-z</title>
         <meta
@@ -11,7 +15,11 @@ const Home = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-    </div>
+      <Hero />
+      <History />
+      <Rules />
+      <Terms />
+    </>
   );
 };
 
