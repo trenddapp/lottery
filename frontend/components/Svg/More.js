@@ -1,7 +1,6 @@
 const More = () => {
   return (
     <svg
-      xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 24 24"
       width="40"
       color="textSubtle"
