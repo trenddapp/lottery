@@ -1,8 +1,4 @@
 import Head from "next/head";
-import { Hero } from "../components/Hero";
-import { History } from "../components/History";
-import { Rules } from "../components/Rules";
-import { Terms } from "../components/Terms";
 
 const Home = () => {
   return (
@@ -15,10 +11,6 @@ const Home = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Hero />
-      <History />
-      <Rules />
-      <Terms />
     </>
   );
 };

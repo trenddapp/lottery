@@ -1,7 +1,6 @@
 const MetaMask = () => {
   return (
     <svg
-      xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 40 40"
       width="40"
       color="text"
