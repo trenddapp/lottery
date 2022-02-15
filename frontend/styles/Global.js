@@ -14,45 +14,70 @@ const GlobalStyle = createGlobalStyle`
   figure, figcaption, footer, header, hgroup, 
   menu, nav, output, ruby, section, summary,
   time, mark, audio, video {
-  	border: 0;
-  	font-size: 100%;
-  	margin: 0;
-  	padding: 0;
-  	vertical-align: baseline;
+    border: 0;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
   }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure, 
   footer, header, hgroup, menu, nav, section {
-  	display: block;
+    display: block;
   }
   body {
-	  background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${({ theme }) => theme.colors.background};
     font-family: sans-serif;
-  	line-height: 1;
+    line-height: 1.5;
+    min-height: 100vh;
   }
   ol, ul {
-  	list-style: none;
+    list-style: none;
   }
   blockquote, q {
-  	quotes: none;
+    quotes: none;
   }
   blockquote:before, blockquote:after,
   q:before, q:after {
-  	content: '';
-  	content: none;
+    content: '';
+    content: none;
   }
   table {
-  	border-collapse: collapse;
-  	border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
   }
   a {
     color: inherit;
     text-decoration: none;
   }
+  img,
+  picture {
+    display: block;
+    max-width: 100%;
+  }
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
   *,
   *::before,
   *::after {
     box-sizing: border-box;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+    scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 `;
 
