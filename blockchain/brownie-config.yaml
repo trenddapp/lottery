@@ -1,44 +1,23 @@
 dependencies:
-  - smartcontractkit/chainlink-brownie-contracts@0.3.1
-  - OpenZeppelin/openzeppelin-contracts@4.4.0
+  - smartcontractkit/chainlink-brownie-contracts@0.4.0
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0
+  - OpenZeppelin/openzeppelin-contracts@4.5.0
 compiler:
   solc:
     remappings:
-      - "@chainlink=smartcontractkit/chainlink-brownie-contracts@0.3.1"
-      - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.4.0"
+      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@0.4.0'
+      - '@openzeppelin=OpenZeppelin'
 dotenv: .env
 networks:
   default: development
   # https://docs.chain.link/docs/vrf-contracts/
   mainnet:
-    link_token: "0x404460C6A5EdE2D891e8297795264fDe62ADBB75"
-    vrf_coordinator: "0x747973a5A2a4Ae1D3a8fDF5479f1514F65Db9C31"
-    keyhash: "0xc251acd21ec4fb7f31bb8868288bfdbaeb4fbfec2df3735ddbd4f7dc8d60103c"
+    link_token: '0x404460C6A5EdE2D891e8297795264fDe62ADBB75'
+    vrf_coordinator: '0x747973a5A2a4Ae1D3a8fDF5479f1514F65Db9C31'
+    keyhash: '0xc251acd21ec4fb7f31bb8868288bfdbaeb4fbfec2df3735ddbd4f7dc8d60103c'
     fee: 2000000000000000000 # 2 LINK
     verify: True
-  bsc-main:
-    link_token: "0xa36085F69e2889c224210F603D836748e7dC0088"
-    vrf_coordinator: "0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9"
-    keyhash: "0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4"
-    fee: 200000000000000000 # 0.2 LINK
-    verify: True
-  kovan:
-    link_token: "0xa36085F69e2889c224210F603D836748e7dC0088"
-    vrf_coordinator: "0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9"
-    keyhash: "0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4"
-    fee: 100000000000000000 # 0.1 LINK
-    verify: True
   rinkeby:
-    link_token: '0x01BE23585060835E02B77ef475b0Cc51aA1e0709'
-    vrf_coordinator: '0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B'
-    keyhash: '0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311'
-    fee: 100000000000000000 # 0.1 LINK
-    verify: True
-  bsc-test:
-    link_token: '0x84b9B910527Ad5C03A9Ca831909E21e236EA7b06'
-    vrf_coordinator: '0xa555fC018435bef5A13C6c6870a9d4C11DEC329C'
-    keyhash: '0xcaf3c3727e033261d383b315559476f48034c13b18f8cafed4d871abe5049186'
-    fee: 100000000000000000 # 0.1 LINK
     verify: True
 wallets:
   from_key: ${PRIVATE_KEY}
