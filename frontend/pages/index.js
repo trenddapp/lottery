@@ -1,18 +1,15 @@
-import Head from "next/head";
+import Head from 'next/head'
 
 const Home = () => {
   return (
     <>
       <Head>
-        <title>Lottery | dapp-z</title>
-        <meta
-          name="description"
-          content="Decentralized lottery app by dapp-z."
-        />
+        <title>Lottery</title>
+        <meta name="description" content="Decentralized Lottery by DAPP-Z" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
