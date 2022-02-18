@@ -1,10 +1,16 @@
-import styled from "styled-components";
-import { layout, space, typography } from "styled-system";
+import styled from 'styled-components'
+import { color, layout, space, typography } from 'styled-system'
 
 const Text = styled.div`
+  color: ${({ theme }) => theme.colors.text};
+  ${color}
   ${layout}
   ${space}
   ${typography}
-`;
+`
 
-export default Text;
+Text.defaultProps = {
+  as: 'p',
+}
+
+export default Text
