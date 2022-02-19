@@ -13,7 +13,7 @@ const TrustWallet = () => {
         fill="#3688EB"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default TrustWallet;
+export default TrustWallet

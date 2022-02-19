@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 const CancelButtonStyled = styled.button`
   width: 100%;
@@ -13,10 +13,10 @@ const CancelButtonStyled = styled.button`
     background-color: ${({ theme }) => theme.modal.colors.hover};
     cursor: pointer;
   }
-`;
+`
 
 const CancelButton = (props) => {
-  return <CancelButtonStyled {...props}>Cancel</CancelButtonStyled>;
-};
+  return <CancelButtonStyled {...props}>Cancel</CancelButtonStyled>
+}
 
-export default CancelButton;
+export default CancelButton

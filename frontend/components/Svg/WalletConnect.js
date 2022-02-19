@@ -12,7 +12,7 @@ const WalletConnect = () => {
         fill="#3389FB"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default WalletConnect;
+export default WalletConnect

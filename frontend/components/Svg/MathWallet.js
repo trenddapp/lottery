@@ -24,7 +24,7 @@ const MathWallet = () => {
         fill="#1D222A"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default MathWallet;
+export default MathWallet

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { SvgMore } from "../Svg";
+import styled from 'styled-components'
+import { SvgMore } from '../Svg'
 
 const ConnectButton = styled.button`
   display: flex;
@@ -16,11 +16,11 @@ const ConnectButton = styled.button`
     background-color: ${({ theme }) => theme.modal.colors.hover};
     cursor: pointer;
   }
-`;
+`
 
 const ConnectButtonText = styled.p`
   margin-top: 8px;
-`;
+`
 
 export const ConnectCardMore = (props) => {
   return (
@@ -28,20 +28,20 @@ export const ConnectCardMore = (props) => {
       <SvgMore />
       <ConnectButtonText>More</ConnectButtonText>
     </ConnectButton>
-  );
-};
+  )
+}
 
 const ConnectCard = ({ connector, icon: ConnectButtonIcon, title }) => {
   const connectButtonHandler = () => {
-    connector.activate();
-  };
+    connector.activate()
+  }
 
   return (
     <ConnectButton onClick={connectButtonHandler}>
       <ConnectButtonIcon />
       <ConnectButtonText>{title}</ConnectButtonText>
     </ConnectButton>
-  );
-};
+  )
+}
 
-export default ConnectCard;
+export default ConnectCard

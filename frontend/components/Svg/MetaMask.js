@@ -124,7 +124,7 @@ const MetaMask = () => {
         fill="#F5841F"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default MetaMask;
+export default MetaMask

@@ -1,10 +1,10 @@
-import { ethers } from "ethers";
-import { defaultRpcUrl } from "../config/constants";
+import { ethers } from 'ethers'
+import { defaultRpcUrl } from '../config/constants'
 
-const rpcProvider = new ethers.providers.StaticJsonRpcProvider(defaultRpcUrl);
+const rpcProvider = new ethers.providers.StaticJsonRpcProvider(defaultRpcUrl)
 
 const useRpcProvider = () => {
-  return rpcProvider;
-};
+  return rpcProvider
+}
 
-export default useRpcProvider;
+export default useRpcProvider

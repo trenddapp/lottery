@@ -16,7 +16,7 @@ const TokenPocket = () => {
         fill="#2761E7"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default TokenPocket;
+export default TokenPocket
