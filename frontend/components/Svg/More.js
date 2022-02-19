@@ -12,7 +12,7 @@ const More = () => {
         fill="#B8ADD2"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default More;
+export default More

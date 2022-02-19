@@ -1,1 +1,1 @@
-export { default as WalletConnectModal } from "./ConnectModal";
+export { default as WalletConnectModal } from './ConnectModal'

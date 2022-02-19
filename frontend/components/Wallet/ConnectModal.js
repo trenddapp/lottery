@@ -1,25 +1,25 @@
-import { useState } from "react";
-import styled from "styled-components";
-import { Modal, ModalHeader, ModalBody, ModalTitle } from "../Modal";
-import ConnectCancel from "./ConnectCancel";
-import ConnectCard, { ConnectCardMore } from "./ConnectCard";
-import connectors from "../../config/connectors";
+import { useState } from 'react'
+import { Modal, ModalHeader, ModalBody, ModalTitle } from '../Modal'
+import styled from 'styled-components'
+import ConnectCancel from './ConnectCancel'
+import ConnectCard, { ConnectCardMore } from './ConnectCard'
+import connectors from '../../config/connectors'
 
 const ConnectCards = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-`;
+`
 
 const ConnectModal = ({ open, onDismiss }) => {
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(false)
 
-  const customConnectors = connectors.slice(0, 3);
+  const customConnectors = connectors.slice(0, 3)
   if (showMore) {
-    customConnectors = connectors;
+    customConnectors = connectors
   }
 
   if (!open) {
-    return null;
+    return null
   }
 
   return (
@@ -44,7 +44,7 @@ const ConnectModal = ({ open, onDismiss }) => {
         <ConnectCancel onClick={onDismiss}>Cancel</ConnectCancel>
       </ModalBody>
     </Modal>
-  );
-};
+  )
+}
 
-export default ConnectModal;
+export default ConnectModal

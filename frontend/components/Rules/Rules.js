@@ -1,5 +1,5 @@
 const Rules = () => {
-  return <>Rules</>;
-};
+  return <>Rules</>
+}
 
-export default Rules;
+export default Rules

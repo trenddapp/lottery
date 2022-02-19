@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 const ModalHeaderStyled = styled.div`
   display: flex;
@@ -6,10 +6,10 @@ const ModalHeaderStyled = styled.div`
   align-items: center;
   min-height: 42px;
   padding-top: 24px;
-`;
+`
 
 const ModalHeader = ({ children }) => {
-  return <ModalHeaderStyled>{children}</ModalHeaderStyled>;
-};
+  return <ModalHeaderStyled>{children}</ModalHeaderStyled>
+}
 
-export default ModalHeader;
+export default ModalHeader

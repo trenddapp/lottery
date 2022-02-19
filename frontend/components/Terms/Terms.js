@@ -1,5 +1,5 @@
 const Terms = () => {
-  return <>Terms</>;
-};
+  return <>Terms</>
+}
 
-export default Terms;
+export default Terms

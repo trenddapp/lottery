@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { background, border, layout, position, space } from "styled-system";
+import { background, border, layout, position, space } from 'styled-system'
+import styled from 'styled-components'
 
 const Box = styled.div`
   ${background}
@@ -7,6 +7,6 @@ const Box = styled.div`
   ${layout}
   ${position}
   ${space}
-`;
+`
 
-export default Box;
+export default Box

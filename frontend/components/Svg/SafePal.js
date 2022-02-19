@@ -24,7 +24,7 @@ const SafePal = () => {
         fill="black"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default SafePal;
+export default SafePal
