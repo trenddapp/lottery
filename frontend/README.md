@@ -4,10 +4,10 @@ The lottery frontend is developed in `Next.js`, `Ethers.js`, and `Web3-React`.
 
 ### Folder Structure:
 
-- `components`: Includes functional react components.
-- `config`: Includes contract ABIs, contract addresses, connectors, and etc.
-- `hooks`: Includes custom hooks.
-- `pages`: Includes pages.
-- `public`: Includes root assets.
-- `styles`: Includes global styles.
-- `theme`: Includes theme.
+- `src/components`: Includes functional react components.
+- `src/config`: Includes contract ABIs, contract addresses, connectors, and etc.
+- `src/hooks`: Includes custom hooks.
+- `src/pages`: Includes pages.
+- `src/public`: Includes root assets.
+- `src/styles`: Includes global styles.
+- `src/theme`: Includes theme.
