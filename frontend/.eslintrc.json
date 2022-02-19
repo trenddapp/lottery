@@ -1,3 +1,15 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "prettier",
+    "plugin:prettier/recommended",
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "no-console": "off"
+  }
 }
