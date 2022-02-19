@@ -13,7 +13,7 @@ const ConnectCards = styled.div`
 const ConnectModal = ({ open, onDismiss }) => {
   const [showMore, setShowMore] = useState(false)
 
-  const customConnectors = connectors.slice(0, 3)
+  let customConnectors = connectors.slice(0, 3)
   if (showMore) {
     customConnectors = connectors
   }
