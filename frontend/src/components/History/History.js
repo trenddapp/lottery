@@ -17,7 +17,6 @@ const StyledCard = styled(Box)`
 const StyledContainer = styled.section`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.backgroundAlt};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
   flex-direction: column;
