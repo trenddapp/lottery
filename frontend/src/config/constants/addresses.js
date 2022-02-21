@@ -1,6 +1,6 @@
 const addresses = {
   lottery: {
-    42: '0xa92928B735dd13c53B5A0992EB0FAf8f6D79dF7b',
+    4: '0xCE3e7Ba6F221556cC6216434B52A5706A96366A5',
   },
 }
 
