@@ -10,7 +10,6 @@ compiler:
 dotenv: .env
 networks:
   default: development
-  # https://docs.chain.link/docs/vrf-contracts/
   mainnet:
     verify: True
   rinkeby:

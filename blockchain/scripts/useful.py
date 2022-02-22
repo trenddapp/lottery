@@ -2,11 +2,11 @@ from brownie import accounts, config, network
 
 
 def get_account(index=0):
-    if network.show_active() == "development":
+    if index:
         return accounts[index]
-    elif network.show_active() in config["networks"]:
-        return accounts.add(config["wallets"]["from_key"])
-    return None
+    if network.show_active() in ["development", "ganache-local"]:
+        return accounts[index]
+    return accounts.add(config["wallets"]["from_key"])
 
 
 def encode_function_data(initializer=None, *args):
@@ -14,8 +14,7 @@ def encode_function_data(initializer=None, *args):
 
     Args:
         initializer ([brownie.network.contract.ContractTx], optional):
-        The initializer function we want to call. Example: `box.store`.
-        Defaults to None.
+        The initializer function we want to call. 
 
         args (Any, optional):
         The arguments to pass to the initializer function
