@@ -1,9 +1,5 @@
-from brownie import (
-    Lottery,
-    LotteryProxyAdmin,
-    LotteryProxy,
-)
-from scripts.useful import get_account, encode_function_data
+from brownie import Lottery, LotteryProxy, LotteryProxyAdmin
+from scripts.useful import encode_function_data, get_account
 
 ACCOUNT = get_account()
 

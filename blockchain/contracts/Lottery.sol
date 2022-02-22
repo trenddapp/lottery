@@ -1,28 +1,24 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
+
+import "@chainlink/contracts/src/v0.8/dev/VRFConsumerBaseV2.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@openzeppelin/openzeppelin-contracts-upgradeable@4.5.0/contracts/access/OwnableUpgradeable.sol";
 import "@openzeppelin/openzeppelin-contracts-upgradeable@4.5.0/contracts/proxy/utils/Initializable.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
-import "@chainlink/contracts/src/v0.8/dev/VRFConsumerBaseV2.sol";
 
-contract LotteryUpgradeable is
+contract Lottery is
     Initializable,
     OwnableUpgradeable,
     VRFConsumerBaseV2(0x6168499c0cFfCaCD319c818142124B7A15E857ab)
 {
-    // Chainlink VRFConsumerBaseV2
     VRFCoordinatorV2Interface constant COORDINATOR =
         VRFCoordinatorV2Interface(0x6168499c0cFfCaCD319c818142124B7A15E857ab);
-    LinkTokenInterface constant LINKTOKEN =
-        LinkTokenInterface(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
-    bytes32 constant keyHash =
+    bytes32 constant KEY_HASH =
         0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
-    uint64 constant subscriptionId = 247; // https://vrf.chain.link/
-    uint32 constant callbackGasLimit = 1000000;
-    uint32 constant numWords = 1;
-    uint16 constant requestConfirmations = 3;
+    uint64 constant SUBSCRIPTION_ID = 247; // https://vrf.chain.link
+    uint32 constant CALLBACK_GAS_LIMIT = 1000000;
+    uint32 constant NUM_WORDS = 1;
+    uint16 constant REQUEST_CONFIRMATIONS = 3;
     uint256[] randomWords;
     uint256 requestId;
 
@@ -37,14 +33,30 @@ contract LotteryUpgradeable is
     uint256 lotteryDuration;
     uint8 winnerPercentage;
 
-    // represents the status of the lottery
     enum Status {
         NOT_STARTED, // The lottery is not started yet
         OPEN, // The lottery is open for ticket purchases
         CLOSED, // The lottery is no longer open for ticket purchases
-        COMPLETED // The lottery has been closed and the numbers drawn
+        COMPLETED // The lottery has been closed and the winner picked
     }
     Status public lotteryStatus = Status.NOT_STARTED;
+
+    struct LotteryInfo {
+        uint256 lotteryID;
+        uint256 prizePool;
+        uint256 costPerTicket;
+        uint256 startingTimestamp;
+        uint256 closingTimestamp;
+        address winner;
+        uint256 randomNumber;
+    }
+    mapping(uint256 => LotteryInfo) public allLotteries;
+
+    event ClaimedReward(uint256 lotteryId);
+    event ClosedLottery(uint256 lotteryId);
+    event CompletedLottery(uint256 lotteryId);
+    event OpenedLottery(uint256 lotteryId);
+    event RequestedRandomWords(uint256 requestId);
 
     modifier canClose() {
         require(
@@ -58,21 +70,24 @@ contract LotteryUpgradeable is
         require(randomResult == 0, "Already closed!"); // to prevent re-closing
         _;
     }
+
     modifier ifNotStarted() {
         require(lotteryStatus == Status.NOT_STARTED);
         _;
     }
+
     modifier ifOpen() {
-        require(
-            block.timestamp <= startingTimestamp + lotteryDuration,
-            "Time is over!"
-        );
         require(
             lotteryStatus == Status.OPEN,
             "The lottery has not started yet!"
         );
+        require(
+            block.timestamp <= startingTimestamp + lotteryDuration,
+            "Time is over!"
+        );
         _;
     }
+
     modifier ifCompleted() {
         require(
             lotteryStatus == Status.COMPLETED,
@@ -80,6 +95,7 @@ contract LotteryUpgradeable is
         );
         _;
     }
+
     modifier onlyWinnerOrOwner() {
         require(
             msg.sender == winner || msg.sender == owner(),
@@ -87,16 +103,11 @@ contract LotteryUpgradeable is
         );
         _;
     }
+
     modifier randomNumberGenerated() {
         require(winner != address(0), "The winner has not been selected!");
         _;
     }
-
-    event RequestedRandomWords(uint256 requestId);
-    event OpenedLottery(uint256 lotteryId);
-    event ClosedLottery(uint256 lotteryId);
-    event CompletedLottery(uint256 lotteryId);
-    event ClaimedReward(uint256 lotteryId);
 
     // constructor
     function initialize() external initializer {
@@ -112,43 +123,22 @@ contract LotteryUpgradeable is
         winnerPercentage = _winnerPercentage;
         lotteryDuration = _lotteryDuration;
         lotteryStatus = Status.OPEN;
-        startingTimestamp = block.timestamp; // now
+        startingTimestamp = block.timestamp;
         emit OpenedLottery(lotteryID);
     }
 
     function buyTicket() external payable ifOpen {
         require(msg.value >= costPerTicket, "Please enter a valid value!");
-        prizePool += costPerTicket; // add value to prizePool
-        participants.push(payable(msg.sender)); // add player to list
+        prizePool += costPerTicket;
+        participants.push(payable(msg.sender));
     }
 
     function closeLottery() external canClose onlyOwner {
-        _requestRandomWords(); // request random number
-        lotteryStatus = Status.CLOSED; // pending
+        _requestRandomWords();
+        lotteryStatus = Status.CLOSED;
         closingTimestamp = block.timestamp;
         emit ClosedLottery(lotteryID);
         emit RequestedRandomWords(requestId);
-    }
-
-    function _requestRandomWords() private onlyOwner {
-        requestId = COORDINATOR.requestRandomWords(
-            keyHash,
-            subscriptionId,
-            requestConfirmations,
-            callbackGasLimit,
-            numWords
-        );
-    }
-
-    function fulfillRandomWords(
-        uint256, /* requestId */
-        uint256[] memory _randomWords
-    ) internal override {
-        randomWords = _randomWords;
-        randomResult = randomWords[0];
-        winner = participants[randomResult % participants.length];
-        lotteryStatus = Status.COMPLETED; // winner picked
-        emit CompletedLottery(lotteryID);
     }
 
     function claimReward()
@@ -159,8 +149,35 @@ contract LotteryUpgradeable is
     {
         uint256 winnerPrize = prizePool * (winnerPercentage / 100);
         _transferPrize(winnerPrize);
+        _addLottery();
         _reset();
         emit ClaimedReward(lotteryID);
+    }
+
+    function withdrawEth() external onlyOwner {
+        require(prizePool == 0, "prizePool is not empty!");
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function fulfillRandomWords(uint256, uint256[] memory _randomWords)
+        internal
+        override
+    {
+        randomWords = _randomWords;
+        randomResult = randomWords[0];
+        winner = participants[randomResult % participants.length];
+        lotteryStatus = Status.COMPLETED;
+        emit CompletedLottery(lotteryID);
+    }
+
+    function _requestRandomWords() private onlyOwner {
+        requestId = COORDINATOR.requestRandomWords(
+            KEY_HASH,
+            SUBSCRIPTION_ID,
+            REQUEST_CONFIRMATIONS,
+            CALLBACK_GAS_LIMIT,
+            NUM_WORDS
+        );
     }
 
     function _transferPrize(uint256 _winnerPrize) private {
@@ -169,21 +186,27 @@ contract LotteryUpgradeable is
         payable(owner()).transfer(prizePool); // transfer the rest of the prizePool to the owner
     }
 
-    function _reset() private {
-        lotteryStatus = Status.NOT_STARTED;
-        lotteryID++;
-        participants = new address payable[](0);
-        prizePool = 0;
-        costPerTicket = 0;
-        startingTimestamp = 0;
-        closingTimestamp = 0;
-        winner = payable(address(0));
-        randomResult = 0;
-        lotteryDuration = 0;
+    function _addLottery() private {
+        allLotteries[lotteryID++] = LotteryInfo(
+            lotteryID,
+            prizePool,
+            costPerTicket,
+            startingTimestamp,
+            closingTimestamp,
+            winner,
+            randomResult
+        );
     }
 
-    function withdrawEth() external onlyOwner {
-        require(prizePool == 0, "prizePool is not empty!");
-        payable(msg.sender).transfer(address(this).balance);
+    function _reset() private {
+        closingTimestamp = 0;
+        costPerTicket = 0;
+        lotteryDuration = 0;
+        lotteryStatus = Status.NOT_STARTED;
+        participants = new address payable[](0);
+        prizePool = 0;
+        randomResult = 0;
+        startingTimestamp = 0;
+        winner = payable(address(0));
     }
 }
