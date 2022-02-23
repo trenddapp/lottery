@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { Flex, Text } from '../Toolkit'
 
 const StyledContainer = styled(Flex)`
@@ -8,8 +8,10 @@ const StyledContainer = styled(Flex)`
   margin-top: 10px;
 `
 
-const HistoryDate = ({ closedAt, drawnAt, roundNumber, startedAt }) => {
-  if (roundNumber === 0) {
+const HistoryDate = ({ isLoading, lottery }) => {
+  const theme = useTheme()
+
+  if (lottery.id === 0) {
     return (
       <StyledContainer>
         <Text> Please enter a round number!</Text>
@@ -17,11 +19,23 @@ const HistoryDate = ({ closedAt, drawnAt, roundNumber, startedAt }) => {
     )
   }
 
+  let startedAt = new Date(lottery.startedAt)
+  let closedAt = new Date(lottery.closedAt)
+
   return (
     <StyledContainer>
-      <Text>Started: {startedAt}</Text>
-      <Text>Closed: {closedAt}</Text>
-      <Text>Drawn: {drawnAt}</Text>
+      <Text>
+        Started:{' '}
+        <Text as="span" color={isLoading ? theme.colors.border : theme.colors.text}>
+          {startedAt.toUTCString()}
+        </Text>
+      </Text>
+      <Text>
+        Closed:{' '}
+        <Text as="span" color={isLoading ? theme.colors.border : theme.colors.text}>
+          {closedAt.toUTCString()}
+        </Text>
+      </Text>
     </StyledContainer>
   )
 }
