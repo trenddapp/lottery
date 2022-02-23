@@ -5,10 +5,7 @@ import { defaultChainId } from '../config/constants'
 import { useRpcProvider } from '.'
 
 const useActiveWeb3React = () => {
-  const { usePriorityProvider, usePriorityChainId } = getPriorityConnector([
-    metaMask,
-    metaMaskHooks,
-  ])
+  const { usePriorityProvider, usePriorityChainId } = getPriorityConnector([metaMask, metaMaskHooks])
 
   const chainId = usePriorityChainId() ?? defaultChainId
   const provider = usePriorityProvider()

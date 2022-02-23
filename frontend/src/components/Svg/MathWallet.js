@@ -1,12 +1,6 @@
 const MathWallet = () => {
   return (
-    <svg
-      viewBox="0 0 40 40"
-      width="40"
-      color="text"
-      xmlns="http://www.w3.org/2000/svg"
-      height="40"
-    >
+    <svg viewBox="0 0 40 40" width="40" color="text" xmlns="http://www.w3.org/2000/svg" height="40">
       <path
         d="M0 10C0 4.47715 4.47715 0 10 0H30C35.5228 0 40 4.47715 40 10V30C40 35.5228 35.5228 40 30 40H10C4.47715 40 0 35.5228 0 30V10Z"
         fill="#FFFFFF"

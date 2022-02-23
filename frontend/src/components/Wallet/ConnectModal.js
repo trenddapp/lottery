@@ -37,9 +37,7 @@ const ConnectModal = ({ open, onDismiss }) => {
               connector={connector.connector}
             />
           ))}
-          {showMore ? null : (
-            <ConnectCardMore onClick={() => setShowMore(true)} />
-          )}
+          {showMore ? null : <ConnectCardMore onClick={() => setShowMore(true)} />}
         </ConnectCards>
         <ConnectCancel onClick={onDismiss}>Cancel</ConnectCancel>
       </ModalBody>
