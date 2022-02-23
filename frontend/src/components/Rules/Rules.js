@@ -21,9 +21,7 @@ const Rules = () => {
       <Text as="h3" fontSize="180%" color={theme.colors.headline}>
         How to Play
       </Text>
-      <Text>
-        There is only one winner in each rounds that wins the big money!
-      </Text>
+      <Text>There is only one winner in each rounds that wins the big money!</Text>
       <RulesSteps />
     </StyledContainer>
   )

@@ -6,10 +6,7 @@ import { useActiveWeb3React } from '.'
 
 const useContractLottery = () => {
   const { library, chainId } = useActiveWeb3React()
-  return useMemo(
-    () => new ethers.Contract(addressLottery[chainId], abiLottery, library),
-    [library],
-  )
+  return useMemo(() => new ethers.Contract(addressLottery[chainId], abiLottery, library), [library])
 }
 
 export default useContractLottery
