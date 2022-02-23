@@ -26,12 +26,12 @@ contract Lottery is
     address payable[] public participants;
     uint256 public costPerTicket;
     uint256 public prizePool;
-    uint256 startingTimestamp;
-    uint256 closingTimestamp;
+    uint256 public startingTimestamp;
+    uint256 private closingTimestamp;
     address payable public winner;
     uint256 public randomResult;
-    uint256 lotteryDuration;
-    uint8 winnerPercentage;
+    uint256 public lotteryDuration;
+    uint8 public winnerPercentage;
 
     enum Status {
         NOT_STARTED, // The lottery is not started yet
@@ -137,8 +137,8 @@ contract Lottery is
         _requestRandomWords();
         lotteryStatus = Status.CLOSED;
         closingTimestamp = block.timestamp;
-        emit ClosedLottery(lotteryID);
         emit RequestedRandomWords(requestId);
+        emit ClosedLottery(lotteryID);
     }
 
     function claimReward()
@@ -147,9 +147,9 @@ contract Lottery is
         randomNumberGenerated
         onlyWinnerOrOwner
     {
+        _addLottery();
         uint256 winnerPrize = prizePool * (winnerPercentage / 100);
         _transferPrize(winnerPrize);
-        _addLottery();
         _reset();
         emit ClaimedReward(lotteryID);
     }
