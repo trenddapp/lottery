@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { ethers } from 'ethers'
 import styled, { useTheme } from 'styled-components'
 import { Box, Flex, Text } from '../Toolkit'
+import { SvgChevronDoubleLeft, SvgChevronDoubleRight, SvgChevronLeft, SvgChevronRight } from '../Svg'
+import { useContractLottery } from '../../hooks'
 import HistoryDate from './HistoryDate'
 import HistoryInfo from './HistoryInfo'
-import HistoryInput from './HistoryInput'
-import HistoryNavigator from './HistoryNavigator'
 
 const StyledCard = styled(Box)`
   background-color: ${({ theme }) => theme.colors.background};
@@ -25,46 +26,162 @@ const StyledContainer = styled.section`
   padding: 14px;
 `
 
-const History = () => {
-  const [closedAt, setClosedAt] = useState()
-  const [drawnAt, setDrawnAt] = useState()
-  const [mostRecentRoundNumber, setMostRecentRoundNumber] = useState(0)
-  const [prizePot, setPrizePot] = useState()
-  const [roundNumber, setRoundNumber] = useState(0)
-  const [startedAt, setStartedAt] = useState()
-  const [winningAddress, setWinningAddress] = useState()
-  const [winningNumber, setWinningNumber] = useState()
+const StyledInput = styled.input`
+  background-color: ${({ theme }) => theme.colors.background};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadiuses.sm};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 90%;
+  margin-left: 10px;
+  padding: 2px;
+  text-align: center;
+  width: 50px;
 
+  &:focus {
+    outline-color: ${({ theme }) => theme.colors.action};
+  }
+`
+
+const StyledButton = styled.button`
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.background};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadiuses.sm};
+  color: ${({ theme }) => theme.colors.action};
+  display: flex;
+  justify-content: center;
+  margin: 2px;
+  padding: 4px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.backgroundAlt};
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline-color: ${({ theme }) => theme.colors.action};
+  }
+
+  :disabled {
+    color: ${({ theme }) => theme.colors.border};
+    cursor: not-allowed;
+  }
+`
+
+const History = () => {
   const theme = useTheme()
+  const contractLottery = useContractLottery()
+  const [isLoading, setIsLoading] = useState(true)
+  const [lottery, setLottery] = useState({
+    id: 0,
+    prizePot: '',
+    closedAt: '',
+    drawnAt: '',
+    startedAt: '',
+    winningAddress: '',
+    winningNumber: '',
+  })
+  const [latestLottery, setLatestLottery] = useState({
+    id: 0,
+    prizePot: '',
+    closedAt: '',
+    drawnAt: '',
+    startedAt: '',
+    winningAddress: '',
+    winningNumber: '',
+  })
+
+  const getLottery = async (id) => {
+    setIsLoading(true)
+
+    let isLatest = false
+    if (id === -1) {
+      isLatest = true
+      id = await contractLottery.lotteryID()
+      id = id - 1
+    }
+
+    const lottery = await contractLottery.allLotteries(id)
+
+    setLottery({
+      id: lottery.lotteryID.toNumber(),
+      closedAt: lottery.closingTimestamp.toNumber() * 1000,
+      prizePot: ethers.utils.formatEther(lottery.prizePool),
+      startedAt: lottery.startingTimestamp.toNumber() * 1000,
+      winningAddress: lottery.winner.toString(),
+      winningNumber: lottery.randomNumber.toString(),
+    })
+
+    if (isLatest) {
+      setLatestLottery({
+        id: lottery.lotteryID.toNumber(),
+        closedAt: lottery.closingTimestamp.toNumber() * 1000,
+        startedAt: lottery.startingTimestamp.toNumber() * 1000,
+        prizePot: ethers.utils.formatEther(lottery.prizePool),
+        winningAddress: lottery.winner.toString(),
+        winningNumber: lottery.randomNumber.toString(),
+      })
+    }
+
+    setIsLoading(false)
+  }
+
+  const inputHandler = (event) => {
+    if (!event.currentTarget.validity.valid) {
+      return
+    }
+
+    if (event.target.value === '' || event.target.value === '0') {
+      setLottery({ ...lottery, id: 0 })
+      return
+    }
+
+    const id = parseInt(event.target.value, 10)
+
+    if (id > latestLottery.id) {
+      id = latestLottery.id
+    }
+
+    setLottery({ ...lottery, id: id })
+    getLottery(id)
+  }
+
+  const leftArrowHandler = () => {
+    const id = lottery.id - 1
+
+    if (lottery.id === 0) {
+      id = 1
+    }
+
+    setLottery({ ...lottery, id: id })
+    getLottery(id)
+  }
+
+  const leftEndArrowHandler = () => {
+    setLottery({ ...lottery, id: 1 })
+    getLottery(1)
+  }
+
+  const rightArrowHandler = () => {
+    const id = lottery.id + 1
+
+    if (id === latestLottery.id) {
+      id = latestLottery.id
+    }
+
+    setLottery({ ...lottery, id: id })
+    getLottery(id)
+  }
+
+  const rightEndArrowHandler = () => {
+    const id = latestLottery.id
+    setLottery({ ...lottery, id: id })
+    getLottery(id)
+  }
 
   useEffect(() => {
-    setClosedAt('Feb 13 2022, 3:30 PM')
-    setDrawnAt('Feb 14 2022, 2:30 PM')
-    setMostRecentRoundNumber(100)
-    setPrizePot(0)
-    setRoundNumber(1)
-    setStartedAt('Feb 12 2022, 4:30 PM')
-    setWinningAddress(0)
-    setWinningNumber(0)
+    getLottery(-1)
   }, [])
-
-  const inputHandler = (roundNumber) => {
-    if (roundNumber > mostRecentRoundNumber) {
-      setRoundNumber(mostRecentRoundNumber)
-      return
-    }
-
-    setRoundNumber(roundNumber)
-  }
-
-  const navigatorHandler = (roundNumber) => {
-    if (roundNumber < 0) {
-      setRoundNumber(1)
-      return
-    }
-
-    setRoundNumber(roundNumber)
-  }
 
   return (
     <StyledContainer>
@@ -74,29 +191,35 @@ const History = () => {
       <StyledCard>
         <Box borderBottom={'1px solid ' + theme.colors.border} padding="14px">
           <Flex alignItems="center" justifyContent="space-between">
-            <HistoryInput
-              roundNumber={roundNumber}
-              setRoundNumber={inputHandler}
-            />
-            <HistoryNavigator
-              mostRecentRoundNumber={mostRecentRoundNumber}
-              roundNumber={roundNumber}
-              setRoundNumber={navigatorHandler}
-            />
+            <Flex alignItems="center" justifyContent="center">
+              <Text as="h4" color={theme.colors.headline}>
+                Round Number
+              </Text>
+              <StyledInput
+                onChange={inputHandler}
+                pattern="^[0-9]+$"
+                type="text"
+                value={lottery.id === 0 ? '' : lottery.id}
+              />
+            </Flex>
+            <Flex alignItems="center" justifyContent="center">
+              <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftEndArrowHandler}>
+                <SvgChevronDoubleLeft height="20px" width="20px" />
+              </StyledButton>
+              <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftArrowHandler}>
+                <SvgChevronLeft height="20px" width="20px" />
+              </StyledButton>
+              <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightArrowHandler}>
+                <SvgChevronRight height="20px" width="20px" />
+              </StyledButton>
+              <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightEndArrowHandler}>
+                <SvgChevronDoubleRight height="20px" width="20px" />
+              </StyledButton>
+            </Flex>
           </Flex>
-          <HistoryDate
-            closedAt={closedAt}
-            drawnAt={drawnAt}
-            roundNumber={roundNumber}
-            startedAt={startedAt}
-          />
+          <HistoryDate isLoading={isLoading} lottery={lottery} />
         </Box>
-        <HistoryInfo
-          prizePot={prizePot}
-          roundNumber={roundNumber}
-          winningAddress={winningAddress}
-          winningNumber={winningNumber}
-        />
+        <HistoryInfo isLoading={isLoading} lottery={lottery} />
       </StyledCard>
     </StyledContainer>
   )
