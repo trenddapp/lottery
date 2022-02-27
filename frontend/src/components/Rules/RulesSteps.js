@@ -44,7 +44,7 @@ const RulesSteps = () => {
           Claim Your Prize
         </Text>
         <Text fontSize="90%" marginTop="14px">
-          Once the round's over, come back to the page and check to see if you've won!
+          Once the round&apos;s over, come back to the page and check to see if you&apos;ve won!
         </Text>
       </StyledCard>
     </Flex>

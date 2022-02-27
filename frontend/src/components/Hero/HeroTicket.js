@@ -26,13 +26,12 @@ const StyledContainer = styled(Flex)`
 `
 
 const HeroTicket = () => {
-  const theme = useTheme()
   const [costPerTicket, setCostPerTicket] = useState(ethers.BigNumber.from(0))
   const contractLottery = useContractLottery()
+  const theme = useTheme()
 
   useEffect(() => {
     contractLottery.costPerTicket().then((costPerTicket) => {
-      console.log(costPerTicket)
       setCostPerTicket(costPerTicket)
     })
   }, [])

@@ -30,15 +30,15 @@ const StyledContainer = styled(Flex)`
 `
 
 const HeroTimer = () => {
-  const theme = useTheme()
+  const [closedAt, setClosedAt] = useState()
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   })
-  const [closedAt, setClosedAt] = useState()
   const contractLottery = useContractLottery()
+  const theme = useTheme()
 
   const calculateClosedAt = async () => {
     const startedAt = await contractLottery.startingTimestamp()
