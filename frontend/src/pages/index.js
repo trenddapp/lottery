@@ -12,6 +12,8 @@ const History = dynamic(() => import('../components/History').then((module) => m
 
 const Rules = dynamic(() => import('../components/Rules').then((module) => module.Rules), { ssr: false })
 
+const Nav = dynamic(() => import('../components/Nav').then((module) => module.Nav), { ssr: false })
+
 const Terms = dynamic(() => import('../components/Terms').then((module) => module.Terms), { ssr: false })
 
 const Home = () => {
@@ -23,6 +25,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LotteryStatusProvider>
+        <Nav />
         <Hero />
         <History />
         <Rules />
