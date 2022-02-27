@@ -136,7 +136,7 @@ const History = () => {
       return
     }
 
-    const id = parseInt(event.target.value, 10)
+    let id = parseInt(event.target.value, 10)
 
     if (id > latestLottery.id) {
       id = latestLottery.id
@@ -147,7 +147,7 @@ const History = () => {
   }
 
   const leftArrowHandler = () => {
-    const id = lottery.id - 1
+    let id = lottery.id - 1
 
     if (lottery.id === 0) {
       id = 1
@@ -163,7 +163,7 @@ const History = () => {
   }
 
   const rightArrowHandler = () => {
-    const id = lottery.id + 1
+    let id = lottery.id + 1
 
     if (id === latestLottery.id) {
       id = latestLottery.id
@@ -174,7 +174,7 @@ const History = () => {
   }
 
   const rightEndArrowHandler = () => {
-    const id = latestLottery.id
+    let id = latestLottery.id
     setLottery({ ...lottery, id: id })
     getLottery(id)
   }

@@ -3,8 +3,8 @@ import { defaultRpcUrl } from '../config/constants'
 
 const rpcProvider = new ethers.providers.StaticJsonRpcProvider(defaultRpcUrl)
 
-const useRpcProvider = () => {
+const useWeb3Provider = () => {
   return rpcProvider
 }
 
-export default useRpcProvider
+export default useWeb3Provider
