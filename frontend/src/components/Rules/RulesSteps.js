@@ -3,7 +3,7 @@ import { Flex, Text } from '../Toolkit'
 
 const StyledCard = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.borderRadiuses.md};
+  border-radius: ${({ theme }) => theme.radii.default};
   border: 1px solid ${({ theme }) => theme.colors.border};
   padding: 14px;
   width: 330px;

@@ -43,12 +43,17 @@ const HeroTimer = () => {
   const calculateClosedAt = async () => {
     const startedAt = await contractLottery.startingTimestamp()
     const duration = await contractLottery.lotteryDuration()
-    const closedAt = new Date((startedAt.toNumber() + duration.toNumber()) * 1000)
-    setClosedAt(closedAt)
+    return new Date((startedAt.toNumber() + duration.toNumber()) * 1000)
   }
 
   useEffect(() => {
     calculateClosedAt()
+      .then((closedAt) => {
+        setClosedAt(closedAt)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
 
   useEffect(() => {
