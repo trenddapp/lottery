@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import styled, { useTheme } from 'styled-components'
 import { Flex, Text } from '../Toolkit'
-import { useContractLottery } from '../../hooks'
+import { useContractLottery, useWeb3Signer } from '../../hooks'
 
 const StyledButton = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
@@ -26,20 +26,39 @@ const StyledContainer = styled(Flex)`
 `
 
 const HeroTicket = () => {
-  const [costPerTicket, setCostPerTicket] = useState(ethers.BigNumber.from(0))
-  const contractLottery = useContractLottery()
+  const [costPerTicket, setCostPerTicket] = useState('0')
+  const signer = useWeb3Signer()
+  const contractLottery = useContractLottery(signer)
   const theme = useTheme()
 
+  const buyTicketHandler = () => {
+    contractLottery
+      .buyTicket({
+        value: ethers.utils.parseEther(costPerTicket),
+      })
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   useEffect(() => {
-    contractLottery.costPerTicket().then((costPerTicket) => {
-      setCostPerTicket(costPerTicket)
-    })
-  }, [contractLottery])
+    contractLottery
+      .costPerTicket()
+      .then((costPerTicket) => {
+        setCostPerTicket(ethers.utils.formatEther(costPerTicket))
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   return (
     <StyledContainer>
-      <Text color={theme.colors.headline}>Ticket Price: {ethers.utils.formatEther(costPerTicket)} ETH</Text>
-      <StyledButton>Buy Ticket</StyledButton>
+      <Text color={theme.colors.headline}>Ticket Price: {costPerTicket} ETH</Text>
+      <StyledButton onClick={buyTicketHandler}>Buy Ticket</StyledButton>
     </StyledContainer>
   )
 }

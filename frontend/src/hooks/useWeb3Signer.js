@@ -5,7 +5,7 @@ const useWeb3Signer = () => {
   const provider = usePriorityProvider()
 
   if (provider === undefined) {
-    return null
+    return undefined
   }
 
   return provider.getSigner()
