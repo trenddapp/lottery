@@ -29,12 +29,7 @@ const Profile = () => {
   return (
     <StyledContainer>
       <StyledCircle>W</StyledCircle>
-      <Box
-        background={theme.colors.action}
-        borderRadius={theme.borderRadiuses.md}
-        marginLeft="-14px"
-        padding="3px 24px"
-      >
+      <Box background={theme.colors.action} borderRadius={theme.radii.default} marginLeft="-14px" padding="3px 24px">
         <Text color={theme.colors.background}>
           {profile.account.slice(0, 5) + '...' + profile.account.slice(38, 42)}
         </Text>

@@ -10,7 +10,7 @@ import HistoryInfo from './HistoryInfo'
 const StyledCard = styled(Box)`
   background-color: ${({ theme }) => theme.colors.background};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadiuses.md};
+  border-radius: ${({ theme }) => theme.radii.default};
   width: 540px;
   overflow: hidden;
 `
@@ -29,7 +29,7 @@ const StyledContainer = styled.section`
 const StyledInput = styled.input`
   background-color: ${({ theme }) => theme.colors.background};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadiuses.sm};
+  border-radius: ${({ theme }) => theme.radii.small};
   color: ${({ theme }) => theme.colors.text};
   font-size: 90%;
   margin-left: 10px;
@@ -46,7 +46,7 @@ const StyledButton = styled.button`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.background};
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadiuses.sm};
+  border-radius: ${({ theme }) => theme.radii.small};
   color: ${({ theme }) => theme.colors.action};
   display: flex;
   justify-content: center;

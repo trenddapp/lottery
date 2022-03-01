@@ -4,7 +4,7 @@ import ConnectModal from './ConnectModal'
 
 const StyledButton = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
-  border-radius: ${({ theme }) => theme.borderRadiuses.md};
+  border-radius: ${({ theme }) => theme.radii.default};
   border: none;
   color: ${({ theme }) => theme.colors.background};
   padding: 14px 48px;

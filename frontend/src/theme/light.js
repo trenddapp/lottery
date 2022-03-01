@@ -1,13 +1,8 @@
+import base from './base'
+
 const lightTheme = {
+  ...base,
   isDark: false,
-  borderRadiuses: {
-    xs: '',
-    sm: '0.375rem',
-    md: '0.5rem',
-    lg: '',
-    xl: '',
-    xxl: '',
-  },
   colors: {
     action: '#145C92',
     background: '#FFFFFF',

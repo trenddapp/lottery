@@ -6,7 +6,7 @@ import { useContractLottery } from '../../hooks'
 
 const StyledButton = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
-  border-radius: ${({ theme }) => theme.borderRadiuses.sm};
+  border-radius: ${({ theme }) => theme.radii.small};
   border: none;
   color: ${({ theme }) => theme.colors.background};
   height: 48px;
@@ -34,7 +34,7 @@ const HeroTicket = () => {
     contractLottery.costPerTicket().then((costPerTicket) => {
       setCostPerTicket(costPerTicket)
     })
-  }, [])
+  }, [contractLottery])
 
   return (
     <StyledContainer>
