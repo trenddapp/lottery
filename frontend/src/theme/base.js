@@ -28,7 +28,9 @@ const siteWidth = 1200
 
 const spacing = [0, 4, 8, 16, 24, 32, 48, 64]
 
-const zIndices = {}
+const zIndices = {
+  toast: 1000,
+}
 
 export default {
   breakpoints,
