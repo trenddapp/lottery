@@ -1,24 +1,28 @@
 import styled from 'styled-components'
-import { Text } from '../Toolkit'
+import { Flex, Text } from '../Toolkit'
 
-const StyledContainer = styled.section`
+const Container = styled(Flex)`
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.backgroundAlt};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-  display: flex;
-  height: 50px;
+  height: 100%;
   justify-content: center;
-  padding: 14px;
+`
+
+const Section = styled.section`
+  background-color: ${({ theme }) => theme.colors.backgroundAlt};
+  border-top: 1px solid ${({ theme }) => theme.colors.borderAlt};
+  height: 50px;
+  padding: 0 16px;
 `
 
 const Terms = () => {
   return (
-    <StyledContainer>
-      <Text fontSize="80%" textAlign="center">
-        Copyright © {new Date().getFullYear()} DAPP-Z
-      </Text>
-    </StyledContainer>
+    <Section>
+      <Container>
+        <Text fontSize="80%" textAlign="center">
+          Copyright © {new Date().getFullYear()} DAPP-Z
+        </Text>
+      </Container>
+    </Section>
   )
 }
 

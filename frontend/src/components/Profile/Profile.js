@@ -1,41 +1,76 @@
-import styled, { useTheme } from 'styled-components'
-import { Box, Flex, Text } from '../Toolkit'
+import styled from 'styled-components'
 import { useWeb3Profile } from '../../hooks'
+import { shortenAddress } from '../../utils'
+import { SvgChevronDown, SvgUser } from '../Svg'
+import { Flex, Text } from '../Toolkit'
 
-const StyledCircle = styled(Flex)`
+const Circle = styled(Flex)`
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.action};
-  border-radius: 50%;
-  color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.backgroundAlt};
+  border-radius: ${({ theme }) => theme.radii.circle};
+  border: 1px solid ${({ theme }) => theme.colors.borderAlt};
+  height: 48px;
   justify-content: center;
-  min-height: 50px;
-  min-width: 50px;
-  z-index: 10;
+  width: 48px;
+  z-index: 1;
 `
 
-const StyledContainer = styled(Flex)`
+const Container = styled(Flex)`
   align-items: center;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 14px;
   justify-content: center;
+`
+
+const Account = styled(Flex)`
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.backgroundAlt};
+  border-bottom-right-radius: ${({ theme }) => theme.radii.default};
+  border-top-right-radius: ${({ theme }) => theme.radii.default};
+  border: 1px solid ${({ theme }) => theme.colors.borderAlt};
+  justify-content: center;
+  margin-left: -8px;
+  min-width: 128px;
+  padding: 4px 10px 4px 14px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const Profile = () => {
-  const profile = useWeb3Profile()
-  const theme = useTheme()
+  const { account, isActivating, isActive } = useWeb3Profile()
 
-  if (!profile.isActive) {
-    return null
+  if (isActivating) {
+    return (
+      <Container>
+        <Circle>
+          <SvgUser height="20px" width="20px" />
+        </Circle>
+        <Account>
+          <Text>connecting...</Text>
+        </Account>
+      </Container>
+    )
   }
 
-  return (
-    <StyledContainer>
-      <StyledCircle>W</StyledCircle>
-      <Box background={theme.colors.action} borderRadius={theme.radii.default} marginLeft="-14px" padding="3px 24px">
-        <Text color={theme.colors.background}>
-          {profile.account.slice(0, 5) + '...' + profile.account.slice(38, 42)}
-        </Text>
-      </Box>
-    </StyledContainer>
-  )
+  if (isActive) {
+    return (
+      <Container>
+        <Circle>
+          <SvgUser height="20px" width="20px" />
+        </Circle>
+        <Account>
+          <Text>{shortenAddress(account)}</Text>
+          <Flex alignItems="center" justifyContent="center" marginLeft="10px">
+            <SvgChevronDown height="20px" width="20px" />
+          </Flex>
+        </Account>
+      </Container>
+    )
+  }
+
+  return null
 }
 
 export default Profile

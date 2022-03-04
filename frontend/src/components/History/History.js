@@ -7,23 +7,28 @@ import { useContractLottery } from '../../hooks'
 import HistoryDate from './HistoryDate'
 import HistoryInfo from './HistoryInfo'
 
+const Container = styled(Flex)`
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  max-width: ${({ theme }) => `${theme.siteWidth}px`};
+`
+
+const Section = styled.section`
+  background-color: ${({ theme }) => theme.colors.background};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  height: 450px;
+  padding: 0 16px;
+`
+
 const StyledCard = styled(Box)`
   background-color: ${({ theme }) => theme.colors.background};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.default};
   width: 540px;
   overflow: hidden;
-`
-
-const StyledContainer = styled.section`
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.backgroundAlt};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  height: 450px;
-  padding: 14px;
 `
 
 const StyledInput = styled.input`
@@ -184,44 +189,46 @@ const History = () => {
   }, [])
 
   return (
-    <StyledContainer>
-      <Text as="h3" color={theme.colors.headline} fontSize="180%">
-        Lottery History
-      </Text>
-      <StyledCard>
-        <Box borderBottom={'1px solid ' + theme.colors.border} padding="14px">
-          <Flex alignItems="center" justifyContent="space-between">
-            <Flex alignItems="center" justifyContent="center">
-              <Text as="h4" color={theme.colors.headline}>
-                Round Number
-              </Text>
-              <StyledInput
-                onChange={inputHandler}
-                pattern="^[0-9]+$"
-                type="text"
-                value={lottery.id === 0 ? '' : lottery.id}
-              />
+    <Section>
+      <Container>
+        <Text as="h3" color={theme.colors.headline} fontSize="180%">
+          Lottery History
+        </Text>
+        <StyledCard>
+          <Box borderBottom={'1px solid ' + theme.colors.border} padding="14px">
+            <Flex alignItems="center" justifyContent="space-between">
+              <Flex alignItems="center" justifyContent="center">
+                <Text as="h4" color={theme.colors.headline}>
+                  Round Number
+                </Text>
+                <StyledInput
+                  onChange={inputHandler}
+                  pattern="^[0-9]+$"
+                  type="text"
+                  value={lottery.id === 0 ? '' : lottery.id}
+                />
+              </Flex>
+              <Flex alignItems="center" justifyContent="center">
+                <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftEndArrowHandler}>
+                  <SvgChevronDoubleLeft height="20px" width="20px" />
+                </StyledButton>
+                <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftArrowHandler}>
+                  <SvgChevronLeft height="20px" width="20px" />
+                </StyledButton>
+                <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightArrowHandler}>
+                  <SvgChevronRight height="20px" width="20px" />
+                </StyledButton>
+                <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightEndArrowHandler}>
+                  <SvgChevronDoubleRight height="20px" width="20px" />
+                </StyledButton>
+              </Flex>
             </Flex>
-            <Flex alignItems="center" justifyContent="center">
-              <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftEndArrowHandler}>
-                <SvgChevronDoubleLeft height="20px" width="20px" />
-              </StyledButton>
-              <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftArrowHandler}>
-                <SvgChevronLeft height="20px" width="20px" />
-              </StyledButton>
-              <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightArrowHandler}>
-                <SvgChevronRight height="20px" width="20px" />
-              </StyledButton>
-              <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightEndArrowHandler}>
-                <SvgChevronDoubleRight height="20px" width="20px" />
-              </StyledButton>
-            </Flex>
-          </Flex>
-          <HistoryDate isLoading={isLoading} lottery={lottery} />
-        </Box>
-        <HistoryInfo isLoading={isLoading} lottery={lottery} />
-      </StyledCard>
-    </StyledContainer>
+            <HistoryDate isLoading={isLoading} lottery={lottery} />
+          </Box>
+          <HistoryInfo isLoading={isLoading} lottery={lottery} />
+        </StyledCard>
+      </Container>
+    </Section>
   )
 }
 
