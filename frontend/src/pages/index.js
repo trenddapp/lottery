@@ -12,6 +12,16 @@ const LotteryStatusProvider = dynamic(
 )
 
 // TODO: Remove dynamic import when web3-react supports ssr.
+const Banner = dynamic(
+  () => {
+    return import('../components/Banner').then((module) => {
+      return module.Banner
+    })
+  },
+  { ssr: false },
+)
+
+// TODO: Remove dynamic import when web3-react supports ssr.
 const Hero = dynamic(
   () => {
     return import('../components/Hero').then((module) => {
@@ -70,6 +80,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LotteryStatusProvider>
+        <Banner />
         <Nav />
         <Hero />
         <History />
