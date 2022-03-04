@@ -4,6 +4,8 @@ import RulesSteps from './RulesSteps'
 
 const Container = styled(Flex)`
   align-items: center;
+  border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+  border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
   flex-direction: column;
   height: 100%;
   justify-content: space-evenly;
@@ -14,7 +16,7 @@ const Container = styled(Flex)`
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.background};
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-  height: 450px;
+  height: 500px;
   padding: 0 16px;
 `
 
@@ -24,10 +26,12 @@ const Rules = () => {
   return (
     <Section>
       <Container>
-        <Text as="h3" fontSize="180%" color={theme.colors.headline}>
-          How to Play
-        </Text>
-        <Text>There is only one winner in each rounds that wins the big money!</Text>
+        <Flex alignItems="center" flexDirection="column" justifyContent="center">
+          <Text as="h3" fontSize="180%" color={theme.colors.headline}>
+            How to Play
+          </Text>
+          <Text marginTop="16px">There is only one winner in each rounds that wins the big money!</Text>
+        </Flex>
         <RulesSteps />
       </Container>
     </Section>

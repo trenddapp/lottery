@@ -4,10 +4,10 @@ import ConnectModal from './ConnectModal'
 
 const StyledButton = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
-  border-radius: ${({ theme }) => theme.radii.default};
+  border-radius: 6px;
   border: none;
   color: ${({ theme }) => theme.colors.background};
-  padding: 14px 48px;
+  padding: 10px 40px;
 
   &:hover {
     cursor: pointer;

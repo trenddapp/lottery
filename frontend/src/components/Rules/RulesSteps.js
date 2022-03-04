@@ -13,7 +13,7 @@ const RulesSteps = () => {
   const theme = useTheme()
 
   return (
-    <Flex alignItems="center" justifyContent="space-between" maxWidth="1200px" width="100%">
+    <Flex alignItems="center" justifyContent="space-evenly" width="100%">
       <StyledCard>
         <Text as="span" fontSize="75%">
           Step 1

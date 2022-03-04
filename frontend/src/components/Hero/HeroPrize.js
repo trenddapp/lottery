@@ -4,7 +4,7 @@ import styled, { useTheme } from 'styled-components'
 import { useContractLottery, useInterval } from '../../hooks'
 import { Flex, Text } from '../Toolkit'
 
-const StyledContainer = styled(Flex)`
+const Container = styled(Flex)`
   align-items: center;
   flex-direction: column;
   justify-content: center;
@@ -17,18 +17,27 @@ const HeroPrize = () => {
 
   // Check for status before polling prize pool.
   useInterval(() => {
-    contractLottery.prizePool().then((prizePool) => {
-      setPrize(ethers.utils.formatEther(prizePool))
-    })
+    if (contractLottery !== undefined) {
+      contractLottery
+        .prizePool()
+        .then((prizePool) => {
+          setPrize(ethers.utils.formatEther(prizePool))
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }, 20000)
 
   return (
-    <StyledContainer>
-      <Text color={theme.colors.action} fontSize="180%">
-        {prize} ETH
+    <Container>
+      <Text color={theme.colors.action} fontSize="50px">
+        $100,000
       </Text>
-      <Text color={theme.colors.headline}>in prizes!</Text>
-    </StyledContainer>
+      <Text color={theme.colors.headline} fontSize="28px">
+        in prizes!
+      </Text>
+    </Container>
   )
 }
 

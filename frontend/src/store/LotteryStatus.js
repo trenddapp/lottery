@@ -13,9 +13,16 @@ export const LotteryStatusProvider = ({ children }) => {
   const [lotteryStatus, setLotteryStatus] = useState(LotteryStatusNotStarted)
 
   useInterval(() => {
-    contractLottery.lotteryStatus().then((lotteryStatus) => {
-      setLotteryStatus(lotteryStatus)
-    })
+    if (contractLottery !== undefined) {
+      contractLottery
+        .lotteryStatus()
+        .then((lotteryStatus) => {
+          setLotteryStatus(lotteryStatus)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }, 60000)
 
   return <LotteryStatusContext.Provider value={lotteryStatus}>{children}</LotteryStatusContext.Provider>

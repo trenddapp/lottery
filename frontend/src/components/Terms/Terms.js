@@ -5,6 +5,8 @@ const Container = styled(Flex)`
   align-items: center;
   height: 100%;
   justify-content: center;
+  margin: 0 auto;
+  max-width: ${({ theme }) => `${theme.siteWidth}px`};
 `
 
 const Section = styled.section`

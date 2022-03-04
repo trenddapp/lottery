@@ -11,10 +11,18 @@ const useContractLottery = (signer) => {
   const provider = useWeb3Provider()
 
   if (signer === undefined) {
-    return useMemo(() => new ethers.Contract(address, abi, provider), [provider])
+    try {
+      return useMemo(() => new ethers.Contract(address, abi, provider), [provider])
+    } catch (err) {
+      return undefined
+    }
   }
 
-  return useMemo(() => new ethers.Contract(address, abi, signer), [signer])
+  try {
+    return useMemo(() => new ethers.Contract(address, abi, signer), [signer])
+  } catch (err) {
+    return undefined
+  }
 }
 
 export default useContractLottery

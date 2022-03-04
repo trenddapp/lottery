@@ -9,6 +9,8 @@ import HistoryInfo from './HistoryInfo'
 
 const Container = styled(Flex)`
   align-items: center;
+  border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+  border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
   flex-direction: column;
   height: 100%;
   justify-content: space-evenly;
@@ -19,7 +21,7 @@ const Container = styled(Flex)`
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.background};
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-  height: 450px;
+  height: 500px;
   padding: 0 16px;
 `
 
