@@ -41,11 +41,11 @@ const Banner = () => {
     <Section>
       <Container>
         <Text color={theme.colors.background} width="250px">
-          Rinkeby Testnet
+          Ethereum Rinkeby Network
         </Text>
         <Flex alignItems="center" justifyContent="center" width="250px">
           <Text color={theme.colors.background}>
-            Free ETH on Rinkeby -{' '}
+            Free Rinkeby ETH -{' '}
             <Link href="https://faucets.chain.link/rinkeby" target="_blank">
               Open website
             </Link>

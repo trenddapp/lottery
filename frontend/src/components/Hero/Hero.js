@@ -1,11 +1,13 @@
 import styled from 'styled-components'
-import { Flex } from '../Toolkit'
+import { Box, Flex } from '../Toolkit'
 import HeroPrize from './HeroPrize'
 import HeroTimer from './HeroTimer'
 import HeroTicket from './HeroTicket'
 
 const Container = styled(Flex)`
   align-items: center;
+  border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+  border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
   flex-direction: column;
   height: 100%;
   justify-content: space-evenly;
@@ -16,8 +18,13 @@ const Container = styled(Flex)`
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.background};
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-  height: 550px;
+  height: 500px;
   padding: 0 16px;
+`
+
+const Separator = styled(Box)`
+  border-top: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+  width: 350px;
 `
 
 const Hero = () => {
@@ -25,6 +32,7 @@ const Hero = () => {
     <Section>
       <Container>
         <HeroPrize />
+        <Separator />
         <HeroTimer />
         <HeroTicket />
       </Container>
