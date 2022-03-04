@@ -1,29 +1,36 @@
 import styled, { useTheme } from 'styled-components'
-import { Text } from '../Toolkit'
+import { Flex, Text } from '../Toolkit'
 import RulesSteps from './RulesSteps'
 
-const StyledContainer = styled.section`
+const Container = styled(Flex)`
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.backgroundAlt};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-  display: flex;
   flex-direction: column;
-  height: 450px;
+  height: 100%;
   justify-content: space-evenly;
-  padding: 14px;
+  margin: 0 auto;
+  max-width: ${({ theme }) => `${theme.siteWidth}px`};
+`
+
+const Section = styled.section`
+  background-color: ${({ theme }) => theme.colors.background};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  height: 450px;
+  padding: 0 16px;
 `
 
 const Rules = () => {
   const theme = useTheme()
 
   return (
-    <StyledContainer>
-      <Text as="h3" fontSize="180%" color={theme.colors.headline}>
-        How to Play
-      </Text>
-      <Text>There is only one winner in each rounds that wins the big money!</Text>
-      <RulesSteps />
-    </StyledContainer>
+    <Section>
+      <Container>
+        <Text as="h3" fontSize="180%" color={theme.colors.headline}>
+          How to Play
+        </Text>
+        <Text>There is only one winner in each rounds that wins the big money!</Text>
+        <RulesSteps />
+      </Container>
+    </Section>
   )
 }
 

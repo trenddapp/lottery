@@ -1,25 +1,34 @@
 import styled from 'styled-components'
+import { Flex } from '../Toolkit'
 import HeroPrize from './HeroPrize'
 import HeroTimer from './HeroTimer'
 import HeroTicket from './HeroTicket'
 
-const StyledContainer = styled.section`
+const Container = styled(Flex)`
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.background};
-  display: flex;
   flex-direction: column;
+  height: 100%;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  max-width: ${({ theme }) => `${theme.siteWidth}px`};
+`
+
+const Section = styled.section`
+  background-color: ${({ theme }) => theme.colors.background};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
   height: 550px;
-  justify-content: center;
-  padding: 14px;
+  padding: 0 16px;
 `
 
 const Hero = () => {
   return (
-    <StyledContainer>
-      <HeroPrize />
-      <HeroTimer />
-      <HeroTicket />
-    </StyledContainer>
+    <Section>
+      <Container>
+        <HeroPrize />
+        <HeroTimer />
+        <HeroTicket />
+      </Container>
+    </Section>
   )
 }
 
