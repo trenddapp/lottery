@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import styled, { useTheme } from 'styled-components'
-import { Box, Flex, Text } from '../Toolkit'
 import { SvgBan, SvgCheckCircle, SvgExclamation, SvgInformationCircle } from '../Svg'
+import { Box, Flex, Text } from '../Toolkit'
 
 export const variants = {
   DANGER: 'danger',
@@ -13,16 +13,16 @@ export const variants = {
 const getColor = (theme, variant = variants.INFO) => {
   switch (variant) {
     case variants.INFO:
-      return 'blue'
+      return theme.colors.secondary
 
     case variants.DANGER:
-      return '#ED4B9E'
+      return theme.colors.failure
 
     case variants.SUCCESS:
-      return '#31D0AA'
+      return theme.colors.success
 
     case variants.WARNING:
-      return 'yellow'
+      return theme.colors.warning
   }
 }
 
@@ -42,24 +42,22 @@ const getIcon = (variant = variants.INFO) => {
   }
 }
 
-const StyledContainer = styled(Box)`
-  background-color: #ffffff;
-  border-radius: ${({ theme }) => theme.radii.default};
+const Container = styled(Flex)`
+  background-color: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.radii.normal};
+  box-shadow: ${({ theme }) => theme.shadows.toast};
+  left: calc((100% - ${({ theme }) => theme.siteWidth}px) / 2);
   max-width: calc(100% - 32px);
-  position: fixed;
-  right: 16px;
-  width: 100%;
   overflow: hidden;
-  box-shadow: 0px 20px 36px -8px rgba(14, 14, 44, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  width: 100%;
 
   ${({ theme }) => theme.mediaQueries.sm} {
     max-width: 400px;
   }
 `
 
-const StyledAlert = styled(Flex)``
-
-const StyledIcon = styled(Box)`
+const IconLabel = styled(Box)`
   background-color: ${({ theme, variant }) => getColor(theme, variant)};
   color: ${({ theme }) => theme.colors.background};
   padding: 16px;
@@ -98,24 +96,17 @@ const Toast = ({ toast, onRemove, ttl, style }) => {
   }, [handleRemove, timer, ttl])
 
   return (
-    <StyledContainer
-      onClick={handleRemove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={style}
-    >
-      <StyledAlert>
-        <StyledIcon variant={type}>
-          <Icon width="24px" height="24px" />
-        </StyledIcon>
-        <Box padding="16px">
-          <Text as="h4" color={theme.colors.headline}>
-            {title}
-          </Text>
-          <Text marginTop="8px">{description}</Text>
-        </Box>
-      </StyledAlert>
-    </StyledContainer>
+    <Container onClick={handleRemove} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={style}>
+      <IconLabel variant={type}>
+        <Icon width="24px" height="24px" />
+      </IconLabel>
+      <Box padding="16px">
+        <Text as="h4" color={theme.colors.headline}>
+          {title}
+        </Text>
+        <Text marginTop="8px">{description}</Text>
+      </Box>
+    </Container>
   )
 }
 

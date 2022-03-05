@@ -18,11 +18,14 @@ const mediaQueries = {
 
 const radii = {
   small: '4px',
+  normal: '10px',
   default: '16px',
   circle: '50%',
 }
 
-const shadows = {}
+const shadows = {
+  toast: 'rgba(0, 0, 0, 0.3) 0px 0px 20px 0px',
+}
 
 const siteWidth = 1200
 
