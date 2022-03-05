@@ -17,7 +17,7 @@ const mediaQueries = {
 }
 
 const radii = {
-  small: '4px',
+  small: '6px',
   normal: '10px',
   default: '16px',
   circle: '50%',

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const CancelButtonStyled = styled.button`
+const Button = styled.button`
   width: 100%;
   border: none;
   padding: 10px 0px;
@@ -16,7 +16,7 @@ const CancelButtonStyled = styled.button`
 `
 
 const CancelButton = (props) => {
-  return <CancelButtonStyled {...props}>Cancel</CancelButtonStyled>
+  return <Button {...props}>Cancel</Button>
 }
 
 export default CancelButton

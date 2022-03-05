@@ -1,27 +1,24 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
-import styled, { useTheme } from 'styled-components'
+import { useTheme } from 'styled-components'
 import { useContractLottery, useInterval } from '../../hooks'
 import { Flex, Text } from '../Toolkit'
 
-const Container = styled(Flex)`
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-`
-
 const HeroPrize = () => {
-  const theme = useTheme()
-  const [prize, setPrize] = useState('0.0')
+  const [prize, setPrize] = useState(0)
   const contractLottery = useContractLottery()
+  const theme = useTheme()
 
-  // Check for status before polling prize pool.
+  // TODO: Check for status before polling prize pool.
   useInterval(() => {
     if (contractLottery !== undefined) {
       contractLottery
         .prizePool()
         .then((prizePool) => {
-          setPrize(ethers.utils.formatEther(prizePool))
+          // TODO: Fetch conversion rate from backend.
+          const prizeInEth = parseFloat(ethers.utils.formatEther(prizePool))
+          const prizeInUsd = prizeInEth * 2000
+          setPrize(prizeInUsd)
         })
         .catch((err) => {
           console.log(err)
@@ -30,14 +27,14 @@ const HeroPrize = () => {
   }, 20000)
 
   return (
-    <Container>
+    <Flex alignItems="center" flexDirection="column" justifyContent="center">
       <Text color={theme.colors.action} fontSize="50px">
-        $100,000
+        ${prize === 0 ? '0.00' : prize.toString()}
       </Text>
       <Text color={theme.colors.headline} fontSize="28px">
         in prizes!
       </Text>
-    </Container>
+    </Flex>
   )
 }
 

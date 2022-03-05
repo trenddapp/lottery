@@ -25,18 +25,18 @@ const Section = styled.section`
   padding: 0 16px;
 `
 
-const StyledCard = styled(Box)`
+const Card = styled(Box)`
   background-color: ${({ theme }) => theme.colors.background};
-  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.default};
-  width: 540px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   overflow: hidden;
+  width: 540px;
 `
 
-const StyledInput = styled.input`
+const Input = styled.input`
   background-color: ${({ theme }) => theme.colors.background};
-  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.small};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.text};
   font-size: 90%;
   margin-left: 10px;
@@ -49,16 +49,21 @@ const StyledInput = styled.input`
   }
 `
 
-const StyledButton = styled.button`
+const Button = styled.button`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.background};
-  border: none;
   border-radius: ${({ theme }) => theme.radii.small};
+  border: none;
   color: ${({ theme }) => theme.colors.action};
   display: flex;
   justify-content: center;
   margin: 2px;
   padding: 4px;
+
+  :disabled {
+    color: ${({ theme }) => theme.colors.border};
+    cursor: not-allowed;
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.backgroundAlt};
@@ -68,16 +73,9 @@ const StyledButton = styled.button`
   &:focus {
     outline-color: ${({ theme }) => theme.colors.action};
   }
-
-  :disabled {
-    color: ${({ theme }) => theme.colors.border};
-    cursor: not-allowed;
-  }
 `
 
 const History = () => {
-  const theme = useTheme()
-  const contractLottery = useContractLottery()
   const [isLoading, setIsLoading] = useState(true)
   const [lottery, setLottery] = useState({
     id: 0,
@@ -97,9 +95,15 @@ const History = () => {
     winningAddress: '',
     winningNumber: '',
   })
+  const contractLottery = useContractLottery()
+  const theme = useTheme()
 
   const getLottery = async (id) => {
     setIsLoading(true)
+
+    if (contractLottery === undefined) {
+      return
+    }
 
     let isLatest = false
     if (id === -1) {
@@ -133,7 +137,7 @@ const History = () => {
     setIsLoading(false)
   }
 
-  const inputHandler = (event) => {
+  const handleInput = (event) => {
     if (!event.currentTarget.validity.valid) {
       return
     }
@@ -150,10 +154,14 @@ const History = () => {
     }
 
     setLottery({ ...lottery, id: id })
-    getLottery(id)
+    try {
+      getLottery(id)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  const leftArrowHandler = () => {
+  const handleLeftArrow = () => {
     let id = lottery.id - 1
 
     if (lottery.id === 0) {
@@ -161,15 +169,23 @@ const History = () => {
     }
 
     setLottery({ ...lottery, id: id })
-    getLottery(id)
+    try {
+      getLottery(id)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  const leftEndArrowHandler = () => {
+  const handleLeftEndArrow = () => {
     setLottery({ ...lottery, id: 1 })
-    getLottery(1)
+    try {
+      getLottery(1)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  const rightArrowHandler = () => {
+  const handleRightArrow = () => {
     let id = lottery.id + 1
 
     if (id === latestLottery.id) {
@@ -177,17 +193,29 @@ const History = () => {
     }
 
     setLottery({ ...lottery, id: id })
-    getLottery(id)
+    try {
+      getLottery(id)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  const rightEndArrowHandler = () => {
+  const handleRightEndArrow = () => {
     let id = latestLottery.id
     setLottery({ ...lottery, id: id })
-    getLottery(id)
+    try {
+      getLottery(id)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {
-    getLottery(-1)
+    try {
+      getLottery(-1)
+    } catch (err) {
+      console.log(err)
+    }
   }, [])
 
   return (
@@ -196,39 +224,39 @@ const History = () => {
         <Text as="h3" color={theme.colors.headline} fontSize="180%">
           Lottery History
         </Text>
-        <StyledCard>
+        <Card>
           <Box borderBottom={'1px solid ' + theme.colors.border} padding="14px">
             <Flex alignItems="center" justifyContent="space-between">
               <Flex alignItems="center" justifyContent="center">
                 <Text as="h4" color={theme.colors.headline}>
                   Round Number
                 </Text>
-                <StyledInput
-                  onChange={inputHandler}
+                <Input
+                  onChange={handleInput}
                   pattern="^[0-9]+$"
                   type="text"
                   value={lottery.id === 0 ? '' : lottery.id}
                 />
               </Flex>
               <Flex alignItems="center" justifyContent="center">
-                <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftEndArrowHandler}>
+                <Button disabled={isLoading || lottery.id === 1} onClick={handleLeftEndArrow}>
                   <SvgChevronDoubleLeft height="20px" width="20px" />
-                </StyledButton>
-                <StyledButton disabled={isLoading || lottery.id === 1} onClick={leftArrowHandler}>
+                </Button>
+                <Button disabled={isLoading || lottery.id === 1} onClick={handleLeftArrow}>
                   <SvgChevronLeft height="20px" width="20px" />
-                </StyledButton>
-                <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightArrowHandler}>
+                </Button>
+                <Button disabled={isLoading || lottery.id === latestLottery.id} onClick={handleRightArrow}>
                   <SvgChevronRight height="20px" width="20px" />
-                </StyledButton>
-                <StyledButton disabled={isLoading || lottery.id === latestLottery.id} onClick={rightEndArrowHandler}>
+                </Button>
+                <Button disabled={isLoading || lottery.id === latestLottery.id} onClick={handleRightEndArrow}>
                   <SvgChevronDoubleRight height="20px" width="20px" />
-                </StyledButton>
+                </Button>
               </Flex>
             </Flex>
             <HistoryDate isLoading={isLoading} lottery={lottery} />
           </Box>
           <HistoryInfo isLoading={isLoading} lottery={lottery} />
-        </StyledCard>
+        </Card>
       </Container>
     </Section>
   )

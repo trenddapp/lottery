@@ -1,7 +1,7 @@
 import styled, { useTheme } from 'styled-components'
 import { Flex, Text } from '../Toolkit'
 
-const StyledContainer = styled(Flex)`
+const Container = styled(Flex)`
   align-items: center;
   font-size: 70%;
   justify-content: space-between;
@@ -13,9 +13,9 @@ const HistoryDate = ({ isLoading, lottery }) => {
 
   if (lottery.id === 0) {
     return (
-      <StyledContainer>
+      <Container>
         <Text> Please enter a round number!</Text>
-      </StyledContainer>
+      </Container>
     )
   }
 
@@ -23,7 +23,7 @@ const HistoryDate = ({ isLoading, lottery }) => {
   let closedAt = new Date(lottery.closedAt)
 
   return (
-    <StyledContainer>
+    <Container>
       <Text>
         Started:{' '}
         <Text as="span" color={isLoading ? theme.colors.border : theme.colors.text}>
@@ -36,7 +36,7 @@ const HistoryDate = ({ isLoading, lottery }) => {
           {closedAt.toUTCString()}
         </Text>
       </Text>
-    </StyledContainer>
+    </Container>
   )
 }
 
