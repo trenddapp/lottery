@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
+import { useTheme } from 'styled-components'
 import { useContractLottery } from '../../hooks'
-import { Box, Flex, Text } from '../Toolkit'
+import { Flex, Text } from '../Toolkit'
 
 const calculateTimeLeft = (date) => {
   const difference = +date - +new Date()
@@ -30,13 +30,8 @@ const calculateTimeLeft = (date) => {
   return timeLeft
 }
 
-const Container = styled(Flex)`
-  align-items: stretch;
-  justify-content: center;
-`
-
 const HeroTimer = () => {
-  const [closedAt, setClosedAt] = useState(1646608492000)
+  const [closedAt, setClosedAt] = useState()
   const [timeLeft, setTimeLeft] = useState({
     days: '0',
     hours: '00',
@@ -53,15 +48,17 @@ const HeroTimer = () => {
   }
 
   useEffect(() => {
-    if (contractLottery !== undefined) {
-      calculateClosedAt()
-        .then((closedAt) => {
-          setClosedAt(closedAt)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    if (contractLottery === undefined) {
+      return
     }
+
+    calculateClosedAt()
+      .then((closedAt) => {
+        setClosedAt(closedAt)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
 
   useEffect(() => {
@@ -70,12 +67,14 @@ const HeroTimer = () => {
         setTimeLeft(calculateTimeLeft(closedAt))
       }, 1000)
 
-      return () => clearTimeout(id)
+      return () => {
+        clearTimeout(id)
+      }
     }
   })
 
   return (
-    <Container>
+    <Flex alignItems="stretch" justifyContent="center">
       <Flex alignItems="center" flexDirection="column" justifyContent="center">
         <Text color={theme.colors.headline} fontSize="58px">
           {timeLeft.days}
@@ -117,7 +116,7 @@ const HeroTimer = () => {
           SECONDS
         </Text>
       </Flex>
-    </Container>
+    </Flex>
   )
 }
 

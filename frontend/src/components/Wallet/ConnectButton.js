@@ -2,9 +2,9 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import ConnectModal from './ConnectModal'
 
-const StyledButton = styled.button`
+const Button = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.radii.small};
   border: none;
   color: ${({ theme }) => theme.colors.background};
   padding: 10px 40px;
@@ -20,7 +20,7 @@ const ConnectButton = () => {
   return (
     <>
       <ConnectModal open={isOpen} onDismiss={() => setIsOpen(false)} />
-      <StyledButton onClick={() => setIsOpen(true)}>Connect Wallet</StyledButton>
+      <Button onClick={() => setIsOpen(true)}>Connect Wallet</Button>
     </>
   )
 }
