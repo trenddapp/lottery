@@ -1,0 +1,35 @@
+run:
+  build-tags:
+  - lint
+  concurrency: 6
+  deadline: 5m
+  tests: true
+
+linters:
+  enable:
+    - gocritic
+    - godot
+    - goimports
+
+linters-settings:
+  dupl:
+    threshold: 100
+  gci:
+    local-prefixes: github.com/dapp-z/lottery
+  gocritic:
+    enabled-tags:
+    - diagnostic
+    - experimental
+    - opinionated
+    - performance
+    disabled-checks:
+    - hugeParam
+    - ifElseChain
+    - paramTypeCombine
+    - rangeValCopy
+    - unnamedResult
+    - whyNoLint
+  gocyclo:
+    min-complexity: 50
+  goimports:
+    local-prefixes: github.com/dapp-z/lottery
