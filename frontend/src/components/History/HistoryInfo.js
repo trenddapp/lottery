@@ -1,14 +1,44 @@
+import { useRef, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
+import { getEtherscanUrl, shortenAddress } from '../../utils'
 import { Box, Flex, Text } from '../Toolkit'
-import { SvgQuestionMarkCircle } from '../Svg'
+import { SvgClipboard, SvgClipboardCheck, SvgExternalLink, SvgQuestionMarkCircle } from '../Svg'
 
-const Container = styled(Box)`
+const Clickable = styled(Text)`
+  display: flex;
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const Container = styled(Flex)`
+  align-items: space-between;
+  flex-direction: column;
   height: 150px;
+  justify-content: space-between;
   padding: 14px;
 `
 
 const HistoryInfo = ({ isLoading, lottery }) => {
+  const { prizePot, winningAddress, winningNumber } = lottery
+  const [isOnClipboard, setIsOnClipboard] = useState(false)
   const theme = useTheme()
+  const timer = useRef()
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(winningNumber)
+
+    setIsOnClipboard(true)
+
+    if (timer.current !== undefined) {
+      clearTimeout(timer.current)
+    }
+
+    timer.current = setTimeout(() => {
+      setIsOnClipboard(false)
+    }, 3000)
+  }
 
   if (lottery.id === 0) {
     return (
@@ -23,31 +53,46 @@ const HistoryInfo = ({ isLoading, lottery }) => {
 
   return (
     <Container>
-      <Flex alignItems="space-between" flexDirection="column" justifyContent="space-between" height="100%" width="100%">
-        <Flex alignItems="center" justifyContent="space-between">
-          <Text as="h4" color={theme.colors.headline} fontSize="110%">
-            Prize Pot:
-          </Text>
-          <Text as="span" color={isLoading ? theme.colors.border : theme.colors.action}>
-            {lottery.prizePot + ' ETH'}
-          </Text>
-        </Flex>
-        <Flex alignItems="center" justifyContent="space-between">
-          <Text as="h4" color={theme.colors.headline} fontSize="110%">
-            Winning Number:
-          </Text>
-          <Text as="span" color={isLoading ? theme.colors.border : theme.colors.action}>
-            {lottery.winningNumber.slice(0, 5) + '...' + lottery.winningNumber.slice(73, 77)}
-          </Text>
-        </Flex>
-        <Flex alignItems="center" justifyContent="space-between">
-          <Text as="h4" color={theme.colors.headline} fontSize="110%">
-            Winning Address:
-          </Text>
-          <Text as="span" color={isLoading ? theme.colors.border : theme.colors.action}>
-            {lottery.winningAddress.slice(0, 5) + '...' + lottery.winningAddress.slice(38, 42)}
-          </Text>
-        </Flex>
+      <Flex alignItems="center" justifyContent="space-between" paddingRight="18px">
+        <Text fontWeight="700" color={theme.colors.headline}>
+          Prize Pot:
+        </Text>
+        <Text as="span" color={isLoading ? theme.colors.border : theme.colors.action}>
+          {prizePot + ' ETH'}
+        </Text>
+      </Flex>
+
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text fontWeight="700" color={theme.colors.headline}>
+          Winning Number:
+        </Text>
+        <Clickable as="span" color={isLoading ? theme.colors.border : theme.colors.action} onClick={handleCopy}>
+          {winningNumber.slice(0, 3) + '...' + winningNumber.slice(74, 77)}
+          <Box marginLeft="3px">
+            {isOnClipboard ? (
+              <SvgClipboardCheck height="15px" width="15px" />
+            ) : (
+              <SvgClipboard height="15px" width="15px" />
+            )}
+          </Box>
+        </Clickable>
+      </Flex>
+
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text fontWeight="700" color={theme.colors.headline}>
+          Winning Address:
+        </Text>
+        <Clickable
+          as="a"
+          color={isLoading ? theme.colors.border : theme.colors.action}
+          href={getEtherscanUrl(winningAddress)}
+          target="_blank"
+        >
+          {shortenAddress(winningAddress)}
+          <Box marginLeft="3px">
+            <SvgExternalLink height="15px" width="15px" />
+          </Box>
+        </Clickable>
       </Flex>
     </Container>
   )
