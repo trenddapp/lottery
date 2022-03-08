@@ -4,6 +4,16 @@ import { light } from '../theme'
 import { GlobalStyle, ResetCss } from '../styles'
 
 // TODO: Remove dynamic import when web3-react supports ssr.
+const LotteryProvider = dynamic(
+  () => {
+    return import('../store/Lottery').then((module) => {
+      return module.LotteryProvider
+    })
+  },
+  { ssr: false },
+)
+
+// TODO: Remove dynamic import when web3-react supports ssr.
 const ToastsContainer = dynamic(
   () => {
     return import('../components/Toast').then((module) => {
@@ -25,14 +35,16 @@ const ToastsProvider = dynamic(
 
 const MyApp = ({ Component, pageProps }) => {
   return (
-    <ThemeProvider theme={light}>
-      <ToastsProvider>
-        <ResetCss />
-        <GlobalStyle />
-        <ToastsContainer />
-        <Component {...pageProps} />
-      </ToastsProvider>
-    </ThemeProvider>
+    <LotteryProvider>
+      <ThemeProvider theme={light}>
+        <ToastsProvider>
+          <ResetCss />
+          <GlobalStyle />
+          <ToastsContainer />
+          <Component {...pageProps} />
+        </ToastsProvider>
+      </ThemeProvider>
+    </LotteryProvider>
   )
 }
 

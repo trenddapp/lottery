@@ -2,16 +2,6 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 
 // TODO: Remove dynamic import when web3-react supports ssr.
-const LotteryStatusProvider = dynamic(
-  () => {
-    return import('../store/LotteryStatus').then((module) => {
-      return module.LotteryStatusProvider
-    })
-  },
-  { ssr: false },
-)
-
-// TODO: Remove dynamic import when web3-react supports ssr.
 const Banner = dynamic(
   () => {
     return import('../components/Banner').then((module) => {
@@ -79,14 +69,12 @@ const Home = () => {
         <meta name="description" content="Decentralized Lottery by DAPP-Z" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <LotteryStatusProvider>
-        <Banner />
-        <Nav />
-        <Hero />
-        <History />
-        <Rules />
-        <Terms />
-      </LotteryStatusProvider>
+      <Banner />
+      <Nav />
+      <Hero />
+      <History />
+      <Rules />
+      <Terms />
     </>
   )
 }
