@@ -1,4 +1,5 @@
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
+import { SvgGitHub } from '../Svg'
 import { Flex, Text } from '../Toolkit'
 
 const Container = styled(Flex)`
@@ -9,6 +10,14 @@ const Container = styled(Flex)`
   max-width: ${({ theme }) => `${theme.siteWidth}px`};
 `
 
+const Link = styled.a`
+  margin-left: 16px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.backgroundAlt};
   border-top: 1px solid ${({ theme }) => theme.colors.borderAlt};
@@ -17,12 +26,17 @@ const Section = styled.section`
 `
 
 const Terms = () => {
+  const theme = useTheme()
+
   return (
     <Section>
       <Container>
-        <Text fontSize="80%" textAlign="center">
-          Copyright © {new Date().getFullYear()} DAPP-Z
+        <Text fontSize="12px" textAlign="center">
+          © {new Date().getFullYear()} DAPP-Z
         </Text>
+        <Link href="https://github.com/dapp-z/lottery" target="_blank">
+          <SvgGitHub fill={theme.colors.text} height="20px" width="20px" />
+        </Link>
       </Container>
     </Section>
   )
