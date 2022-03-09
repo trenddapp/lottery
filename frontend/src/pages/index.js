@@ -12,6 +12,16 @@ const Banner = dynamic(
 )
 
 // TODO: Remove dynamic import when web3-react supports ssr.
+const ClaimReward = dynamic(
+  () => {
+    return import('../components/ClaimReward').then((module) => {
+      return module.ClaimReward
+    })
+  },
+  { ssr: false },
+)
+
+// TODO: Remove dynamic import when web3-react supports ssr.
 const Hero = dynamic(
   () => {
     return import('../components/Hero').then((module) => {
@@ -71,6 +81,7 @@ const Home = () => {
       </Head>
       <Banner />
       <Nav />
+      <ClaimReward />
       <Hero />
       <History />
       <Rules />
