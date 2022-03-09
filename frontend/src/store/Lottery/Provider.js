@@ -3,7 +3,7 @@ import { useContractLottery, useInterval } from '../../hooks'
 import LotteryContext from './Context'
 
 const LotteryProvider = ({ children }) => {
-  const [lotteryStatus, setLotteryStatus] = useState(0)
+  const [status, setStatus] = useState(0)
   const contractLottery = useContractLottery()
 
   useInterval(() => {
@@ -14,14 +14,14 @@ const LotteryProvider = ({ children }) => {
     contractLottery
       .lotteryStatus()
       .then((result) => {
-        setLotteryStatus(result)
+        setStatus(result)
       })
       .catch((error) => {
         console.log(error)
       })
   }, 10000)
 
-  return <LotteryContext.Provider value={{ lotteryStatus }}>{children}</LotteryContext.Provider>
+  return <LotteryContext.Provider value={{ status }}>{children}</LotteryContext.Provider>
 }
 
 export default LotteryProvider
