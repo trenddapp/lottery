@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import styled, { useTheme } from 'styled-components'
-import { Box, Flex, Text } from '../Toolkit'
-import { SvgChevronDoubleLeft, SvgChevronDoubleRight, SvgChevronLeft, SvgChevronRight } from '../Svg'
 import { useContractLottery } from '../../hooks'
+import { LotteryContext } from '../../store/Lottery'
+import { Box, Flex, Text } from '../Toolkit'
 import HistoryDate from './HistoryDate'
 import HistoryInfo from './HistoryInfo'
+import HistoryNavigation from './HistoryNavigation'
 
 const Container = styled(Flex)`
   align-items: center;
@@ -33,49 +34,8 @@ const Card = styled(Box)`
   width: 540px;
 `
 
-const Input = styled.input`
-  background-color: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.radii.small};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 90%;
-  margin-left: 10px;
-  padding: 2px;
-  text-align: center;
-  width: 50px;
-
-  &:focus {
-    outline-color: ${({ theme }) => theme.colors.action};
-  }
-`
-
-const Button = styled.button`
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.radii.small};
-  border: none;
-  color: ${({ theme }) => theme.colors.action};
-  display: flex;
-  justify-content: center;
-  margin: 2px;
-  padding: 4px;
-
-  :disabled {
-    color: ${({ theme }) => theme.colors.border};
-    cursor: not-allowed;
-  }
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.backgroundAlt};
-    cursor: pointer;
-  }
-
-  &:focus {
-    outline-color: ${({ theme }) => theme.colors.action};
-  }
-`
-
 const History = () => {
+  const { status } = useContext(LotteryContext)
   const [isLoading, setIsLoading] = useState(true)
   const [lottery, setLottery] = useState({
     id: 0,
@@ -137,79 +97,6 @@ const History = () => {
     setIsLoading(false)
   }
 
-  const handleInput = (event) => {
-    if (!event.currentTarget.validity.valid) {
-      return
-    }
-
-    if (event.target.value === '' || event.target.value === '0') {
-      setLottery({ ...lottery, id: 0 })
-      return
-    }
-
-    let id = parseInt(event.target.value, 10)
-
-    if (id > latestLottery.id) {
-      id = latestLottery.id
-    }
-
-    setLottery({ ...lottery, id: id })
-    try {
-      getLottery(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleLeftArrow = () => {
-    let id = lottery.id - 1
-
-    if (lottery.id === 0) {
-      id = 1
-    }
-
-    setLottery({ ...lottery, id: id })
-    try {
-      getLottery(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleLeftEndArrow = () => {
-    setLottery({ ...lottery, id: 1 })
-    try {
-      getLottery(1)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleRightArrow = () => {
-    let id = lottery.id + 1
-
-    if (id === latestLottery.id) {
-      id = latestLottery.id
-    }
-
-    setLottery({ ...lottery, id: id })
-    try {
-      getLottery(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleRightEndArrow = () => {
-    let id = latestLottery.id
-    setLottery({ ...lottery, id: id })
-    try {
-      getLottery(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   useEffect(() => {
     try {
       getLottery(-1)
@@ -218,41 +105,31 @@ const History = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (status === 0) {
+      try {
+        getLottery(-1)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }, [status])
+
   return (
     <Section>
       <Container>
-        <Text as="h3" color={theme.colors.headline} fontSize="180%">
+        <Text as="h3" color={theme.colors.headline} fontSize="28px" fontWeight="700">
           Lottery History
         </Text>
         <Card>
           <Box borderBottom={'1px solid ' + theme.colors.border} padding="14px">
-            <Flex alignItems="center" justifyContent="space-between">
-              <Flex alignItems="center" justifyContent="center">
-                <Text as="h4" color={theme.colors.headline}>
-                  Round Number
-                </Text>
-                <Input
-                  onChange={handleInput}
-                  pattern="^[0-9]+$"
-                  type="text"
-                  value={lottery.id === 0 ? '' : lottery.id}
-                />
-              </Flex>
-              <Flex alignItems="center" justifyContent="center">
-                <Button disabled={isLoading || lottery.id === 1} onClick={handleLeftEndArrow}>
-                  <SvgChevronDoubleLeft height="20px" width="20px" />
-                </Button>
-                <Button disabled={isLoading || lottery.id === 1} onClick={handleLeftArrow}>
-                  <SvgChevronLeft height="20px" width="20px" />
-                </Button>
-                <Button disabled={isLoading || lottery.id === latestLottery.id} onClick={handleRightArrow}>
-                  <SvgChevronRight height="20px" width="20px" />
-                </Button>
-                <Button disabled={isLoading || lottery.id === latestLottery.id} onClick={handleRightEndArrow}>
-                  <SvgChevronDoubleRight height="20px" width="20px" />
-                </Button>
-              </Flex>
-            </Flex>
+            <HistoryNavigation
+              getLottery={getLottery}
+              isLoading={isLoading}
+              latestLottery={latestLottery}
+              lottery={lottery}
+              setLottery={setLottery}
+            />
             <HistoryDate isLoading={isLoading} lottery={lottery} />
           </Box>
           <HistoryInfo isLoading={isLoading} lottery={lottery} />
