@@ -1,7 +1,8 @@
+import { useEffect } from 'react'
 import styled from 'styled-components'
-import { useWeb3Profile } from '../../hooks'
+import { useToast, useWeb3Profile } from '../../hooks'
 import { shortenAddress } from '../../utils'
-import { SvgChevronDown, SvgUser } from '../Svg'
+import { SvgChevronDown, SvgExclamation, SvgUser } from '../Svg'
 import { Flex, Text } from '../Toolkit'
 
 const Circle = styled(Flex)`
@@ -39,7 +40,30 @@ const Account = styled(Flex)`
 `
 
 const Profile = () => {
-  const { account, isActivating, isActive } = useWeb3Profile()
+  const { account, isActivating, isActive, isWrongNetwork } = useWeb3Profile()
+  const { toastWarning } = useToast()
+
+  useEffect(() => {
+    if (isWrongNetwork) {
+      toastWarning('Invalid Network', 'Please change network from your wallet!')
+    }
+  }, [isWrongNetwork])
+
+  if (isWrongNetwork) {
+    return (
+      <Container>
+        <Circle>
+          <SvgExclamation height="20px" width="20px" />
+        </Circle>
+        <Account>
+          <Text>wrong network</Text>
+          <Flex alignItems="center" justifyContent="center" marginLeft="10px">
+            <SvgChevronDown height="20px" width="20px" />
+          </Flex>
+        </Account>
+      </Container>
+    )
+  }
 
   if (isActivating) {
     return (
