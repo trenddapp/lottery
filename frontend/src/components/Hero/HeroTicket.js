@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useContractLottery, useToast, useWeb3Signer } from '../../hooks'
+import { LotteryContext } from '../../store/Lottery'
 
 const Button = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
@@ -14,12 +15,17 @@ const Button = styled.button`
     cursor: pointer;
   }
 
+  :disabled {
+    cursor: not-allowed;
+  }
+
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 350px;
   }
 `
 
 const HeroTicket = () => {
+  const { status } = useContext(LotteryContext)
   const { toastError, toastSuccess } = useToast()
   const [costPerTicket, setCostPerTicket] = useState()
   const signer = useWeb3Signer()
@@ -49,6 +55,10 @@ const HeroTicket = () => {
       return
     }
 
+    if (status !== 1) {
+      return
+    }
+
     contractLottery
       .costPerTicket()
       .then((costPerTicket) => {
@@ -57,9 +67,13 @@ const HeroTicket = () => {
       .catch((err) => {
         console.log(err)
       })
-  }, [])
+  }, [status])
 
-  return <Button onClick={handleBuyTicket}>Buy Ticket</Button>
+  return (
+    <Button onClick={handleBuyTicket} disabled={status !== 1}>
+      Buy Ticket
+    </Button>
+  )
 }
 
 export default HeroTicket
