@@ -4,11 +4,21 @@ import { defaultChainId } from '../config/constants'
 const useWeb3Profile = () => {
   const { usePriorityAccount, usePriorityChainId, usePriorityIsActivating, usePriorityIsActive } = useWeb3React()
 
+  const priorityAccount = usePriorityAccount()
+  const priorityChainId = usePriorityChainId()
+  const priorityIsActivating = usePriorityIsActivating()
+  const priorityIsActive = usePriorityIsActive()
+
+  let isWrongNetwork = false
+  if (priorityChainId !== undefined) {
+    isWrongNetwork = priorityChainId !== defaultChainId
+  }
+
   return {
-    account: usePriorityAccount(),
-    isActivating: usePriorityIsActivating(),
-    isActive: usePriorityIsActive(),
-    isWrongNetwork: usePriorityChainId() !== defaultChainId,
+    account: priorityAccount,
+    isActivating: priorityIsActivating,
+    isActive: priorityIsActive,
+    isWrongNetwork: isWrongNetwork,
   }
 }
 
