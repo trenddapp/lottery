@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import styled, { useTheme } from 'styled-components'
-import { useContractLottery, useMatchBreakpoints } from '../../hooks'
+import { useContractLottery } from '../../hooks'
 import { LotteryContext } from '../../store/Lottery'
 import { Box, Flex, Text } from '../Toolkit'
 import HistoryDate from './HistoryDate'
@@ -42,7 +42,6 @@ const Card = styled(Box)`
 `
 
 const History = () => {
-  const { isMobile } = useMatchBreakpoints()
   const { status } = useContext(LotteryContext)
   const [isLoading, setIsLoading] = useState(true)
   const [lottery, setLottery] = useState({

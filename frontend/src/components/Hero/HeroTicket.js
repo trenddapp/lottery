@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useContractLottery, useToast, useWeb3Signer } from '../../hooks'
-import { Box } from '../Toolkit'
 
 const Button = styled.button`
   background-color: ${({ theme }) => theme.colors.action};
