@@ -1,5 +1,7 @@
 export { default as useContractLottery } from './useContractLottery'
 export { default as useInterval } from './useInterval'
+export { default as useIsomorphicEffect } from './useIsomorphicEffect'
+export { default as useMatchBreakpoints } from './useMatchBreakpoints'
 export { default as useToast } from './useToast'
 export { default as useWeb3ChainId } from './useWeb3ChainId'
 export { default as useWeb3Profile } from './useWeb3Profile'

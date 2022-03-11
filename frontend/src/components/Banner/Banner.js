@@ -1,13 +1,18 @@
 import styled, { useTheme } from 'styled-components'
+import { useMatchBreakpoints } from '../../hooks'
 import { Flex, Text } from '../Toolkit'
 import { SvgExternalLink } from '../Svg'
 
 const Container = styled(Flex)`
   align-items: center;
   height: 100%;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0 auto;
   max-width: ${({ theme }) => `${theme.siteWidth}px`};
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    justify-content: space-between;
+  }
 `
 
 const Icon = styled(Flex)`
@@ -35,14 +40,17 @@ const Section = styled.section`
 `
 
 const Banner = () => {
+  const { isMobile } = useMatchBreakpoints()
   const theme = useTheme()
 
   return (
     <Section>
       <Container>
-        <Text color={theme.colors.background} width="250px">
-          Ethereum Rinkeby Network
-        </Text>
+        {isMobile ? null : (
+          <Text color={theme.colors.background} width="250px">
+            Ethereum Rinkeby Network
+          </Text>
+        )}
         <Flex alignItems="center" justifyContent="center" width="250px">
           <Text color={theme.colors.background}>
             Free Rinkeby ETH -{' '}
@@ -54,9 +62,11 @@ const Banner = () => {
             <SvgExternalLink height="16px" width="16px" />
           </Icon>
         </Flex>
-        <Text color={theme.colors.background} textAlign="right" width="250px">
-          Get your free ETH to buy tickets!
-        </Text>
+        {isMobile ? null : (
+          <Text color={theme.colors.background} textAlign="right" width="250px">
+            Get your free ETH to buy tickets!
+          </Text>
+        )}
       </Container>
     </Section>
   )

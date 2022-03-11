@@ -1,4 +1,5 @@
 import styled, { useTheme } from 'styled-components'
+import { useMatchBreakpoints } from '../../hooks'
 import { SvgChevronDoubleLeft, SvgChevronDoubleRight, SvgChevronLeft, SvgChevronRight } from '../Svg'
 import { Flex, Text } from '../Toolkit'
 
@@ -45,6 +46,7 @@ const Input = styled.input`
 `
 
 const HistoryNavigation = ({ getLottery, isLoading, latestLottery, lottery, setLottery }) => {
+  const { isMobile } = useMatchBreakpoints()
   const theme = useTheme()
 
   const handleInput = (event) => {
@@ -120,7 +122,7 @@ const HistoryNavigation = ({ getLottery, isLoading, latestLottery, lottery, setL
     <Flex alignItems="center" justifyContent="space-between">
       <Flex alignItems="center" justifyContent="center">
         <Text as="h4" color={theme.colors.headline}>
-          Round Number
+          {isMobile ? 'Round' : 'Round Number'}
         </Text>
         <Input
           disabled={isLoading}
