@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import styled, { useTheme } from 'styled-components'
-import { useContractLottery } from '../../hooks'
+import { useContractLottery, useMatchBreakpoints } from '../../hooks'
 import { LotteryContext } from '../../store/Lottery'
 import { Box, Flex, Text } from '../Toolkit'
 import HistoryDate from './HistoryDate'
@@ -10,13 +10,16 @@ import HistoryNavigation from './HistoryNavigation'
 
 const Container = styled(Flex)`
   align-items: center;
-  border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
-  border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
   flex-direction: column;
   height: 100%;
   justify-content: space-evenly;
   margin: 0 auto;
   max-width: ${({ theme }) => `${theme.siteWidth}px`};
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+    border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+  }
 `
 
 const Section = styled.section`
@@ -31,10 +34,15 @@ const Card = styled(Box)`
   border-radius: ${({ theme }) => theme.radii.default};
   border: 1px solid ${({ theme }) => theme.colors.border};
   overflow: hidden;
-  width: 540px;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 540px;
+  }
 `
 
 const History = () => {
+  const { isMobile } = useMatchBreakpoints()
   const { status } = useContext(LotteryContext)
   const [isLoading, setIsLoading] = useState(true)
   const [lottery, setLottery] = useState({

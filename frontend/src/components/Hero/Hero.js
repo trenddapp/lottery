@@ -6,13 +6,16 @@ import HeroTicket from './HeroTicket'
 
 const Container = styled(Flex)`
   align-items: center;
-  border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
-  border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
   flex-direction: column;
   height: 100%;
   justify-content: space-evenly;
   margin: 0 auto;
   max-width: ${({ theme }) => `${theme.siteWidth}px`};
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    border-left: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+    border-right: 1px dashed ${({ theme }) => theme.colors.borderAlt};
+  }
 `
 
 const Section = styled.section`
@@ -24,7 +27,11 @@ const Section = styled.section`
 
 const Separator = styled(Box)`
   border-top: 1px dashed ${({ theme }) => theme.colors.borderAlt};
-  width: 350px;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 350px;
+  }
 `
 
 const Hero = () => {

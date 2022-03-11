@@ -2,10 +2,16 @@ import styled, { useTheme } from 'styled-components'
 import { Flex, Text } from '../Toolkit'
 
 const Container = styled(Flex)`
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
   font-size: 70%;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-top: 10px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `
 
 const HistoryDate = ({ isLoading, lottery }) => {

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useWeb3Profile } from '../../hooks'
+import { useMatchBreakpoints, useWeb3Profile } from '../../hooks'
 import { Logo } from '../Logo'
 import { Profile } from '../Profile'
 import { Flex } from '../Toolkit'
@@ -7,20 +7,33 @@ import { WalletConnectButton } from '../Wallet'
 
 const Container = styled(Flex)`
   align-items: center;
+  flex-direction: column;
   height: 100%;
-  justify-content: space-between;
+  justify-content: space-evenly;
   margin: 0 auto;
   max-width: ${({ theme }) => `${theme.siteWidth}px`};
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `
 
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.background};
-  height: 84px;
+  height: 134px;
   padding: 0 16px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: 84px;
+  }
 `
 
 const Nav = () => {
+  const { isMobile } = useMatchBreakpoints()
   const profile = useWeb3Profile()
+
+  let connectButtonWidth = isMobile ? '100%' : ''
 
   if (profile.isActive || profile.isActivating) {
     return (
@@ -37,7 +50,7 @@ const Nav = () => {
     <Section>
       <Container>
         <Logo />
-        <WalletConnectButton />
+        <WalletConnectButton style={{ width: connectButtonWidth }} />
       </Container>
     </Section>
   )

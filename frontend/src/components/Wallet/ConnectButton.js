@@ -14,13 +14,15 @@ const Button = styled.button`
   }
 `
 
-const ConnectButton = () => {
+const ConnectButton = ({ style }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
       <ConnectModal open={isOpen} onDismiss={() => setIsOpen(false)} />
-      <Button onClick={() => setIsOpen(true)}>Connect Wallet</Button>
+      <Button onClick={() => setIsOpen(true)} style={style}>
+        Connect Wallet
+      </Button>
     </>
   )
 }

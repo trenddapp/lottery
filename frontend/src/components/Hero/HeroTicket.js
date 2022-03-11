@@ -9,10 +9,14 @@ const Button = styled.button`
   border: none;
   color: ${({ theme }) => theme.colors.background};
   height: 48px;
-  width: 350px;
+  width: 100%;
 
   &:hover {
     cursor: pointer;
+  }
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 350px;
   }
 `
 
@@ -56,11 +60,7 @@ const HeroTicket = () => {
       })
   }, [])
 
-  return (
-    <Box margin="0 auto">
-      <Button onClick={handleBuyTicket}>Buy Ticket</Button>
-    </Box>
-  )
+  return <Button onClick={handleBuyTicket}>Buy Ticket</Button>
 }
 
 export default HeroTicket
