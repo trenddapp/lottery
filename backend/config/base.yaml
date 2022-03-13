@@ -1,6 +1,6 @@
 clients:
   coinMarketCap:
-    apiKey: change-me
+    apiKey: use-github-secrets
 
 http:
   port: 9080
