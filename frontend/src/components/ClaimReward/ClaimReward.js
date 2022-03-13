@@ -73,7 +73,7 @@ const ClaimReward = () => {
       })
   }, [contractLottery, status])
 
-  if (winner === undefined || winner !== account) {
+  if (winner === undefined || winner !== account || status !== 2) {
     return null
   }
 
