@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -32,14 +32,14 @@ func NewClient(cfg *Config) Client {
 }
 
 // GetConvertionRate returns a convertion rate for a given symbol.
-// The symbol should be capitalized and separated with a hyphen. Ex. ETH-USD, USD-ETH, BTC-ETH
+// The symbol should be capitalized and separated with a hyphen, for example ETH-USD, USD-ETH, BTC-ETH.
 func (c *client) GetConvertionRate(ctx context.Context, symbol string) (float64, error) {
 	symbols := strings.Split(symbol, "-")
 	if len(symbols) != 2 {
 		return 0, ErrInvalidSymbol
 	}
 
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, URL+"/v2/tools/price-conversion", nil)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, URL+"/v2/tools/price-conversion", http.NoBody)
 	if err != nil {
 		return 0, err
 	}
@@ -62,7 +62,7 @@ func (c *client) GetConvertionRate(ctx context.Context, symbol string) (float64,
 		return 0, ErrUnknown
 	}
 
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return 0, err
 	}
