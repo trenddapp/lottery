@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +38,7 @@ func NewRouter(cfg *Config, lifecycle fx.Lifecycle) *gin.Engine {
 			go func() {
 				if err := server.ListenAndServe(); err != nil {
 					// TODO: Log error.
+					log.Fatal(err)
 				}
 			}()
 
