@@ -46,7 +46,7 @@ const Container = styled(Flex)`
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: ${({ theme }) => theme.radii.normal};
   box-shadow: ${({ theme }) => theme.shadows.toast};
-  left: calc((100% - ${({ theme }) => theme.siteWidth}px) / 2);
+  left: 16px;
   max-width: calc(100% - 32px);
   overflow: hidden;
   position: fixed;
@@ -54,6 +54,10 @@ const Container = styled(Flex)`
 
   ${({ theme }) => theme.mediaQueries.sm} {
     max-width: 400px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxl} {
+    left: calc((100% - ${({ theme }) => theme.siteWidth}px) / 2);
   }
 `
 
