@@ -27,6 +27,7 @@ jobs:
     - name: Deploy
       uses: nwtgck/actions-netlify@v1.2
       with:
+        production-deploy: true
         publish-dir: frontend/out
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
