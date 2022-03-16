@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
-import { useContractLottery, useWeb3Profile, useWeb3Signer } from '../../hooks'
+import { useContractLottery, useToast, useWeb3Profile, useWeb3Signer } from '../../hooks'
 import { LotteryContext } from '../../store/Lottery'
 import { Flex, Text } from '../Toolkit'
 
@@ -38,6 +38,7 @@ const Section = styled.section`
 const ClaimReward = () => {
   const { account } = useWeb3Profile()
   const { status } = useContext(LotteryContext)
+  const { toastError } = useToast()
   const [winner, setWinner] = useState()
   const signer = useWeb3Signer()
   const contractLottery = useContractLottery(signer)
@@ -45,6 +46,7 @@ const ClaimReward = () => {
 
   const handleClaimReward = () => {
     if (contractLottery === undefined) {
+      toastError('Failed Transaction - Claim Reward', 'Can not connect to the network! Please try later!')
       return
     }
 
