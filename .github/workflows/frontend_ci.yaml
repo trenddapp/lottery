@@ -1,0 +1,36 @@
+name: Frontend CI
+on:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - frontend/**
+    types:
+    - opened
+    - reopened
+    - synchronize
+jobs:
+  nextjs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup
+      uses: actions/setup-node@v2
+      with:
+        node-version: 17.7.1
+    - name: Install Dependencies
+      run: npm install
+      working-directory: frontend
+    - name: Build
+      run: npm run export
+      working-directory: frontend
+    - name: Test
+      run: npm run test
+      working-directory: frontend
+    - name: Lint
+      run: npm run lint
+      working-directory: frontend
+    - name: Format
+      run: npm run format
+      working-directory: frontend
