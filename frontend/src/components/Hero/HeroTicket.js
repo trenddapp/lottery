@@ -33,6 +33,7 @@ const HeroTicket = () => {
 
   const handleBuyTicket = () => {
     if (contractLottery === undefined) {
+      toastError('Failed Transaction', 'Can not connect to the network! Please try later!')
       return
     }
 
