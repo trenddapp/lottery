@@ -25,9 +25,6 @@ jobs:
     - name: Build
       run: npm run export
       working-directory: frontend
-    - name: Test
-      run: npm run test
-      working-directory: frontend
     - name: Lint
       run: npm run lint
       working-directory: frontend
