@@ -1,7 +1,15 @@
 package main
 
-import "github.com/dapp-z/lottery/backend/service/currency/cmd"
+import (
+	"fmt"
+
+	"github.com/dapp-z/lottery/backend/service/currency/cmd"
+)
 
 func main() {
 	cmd.Execute()
+}
+
+func unUsedFunction() {
+	fmt.Println("Hello World!")
 }
