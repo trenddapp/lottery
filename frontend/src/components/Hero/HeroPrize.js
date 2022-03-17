@@ -44,7 +44,7 @@ const HeroPrize = () => {
           </Text>
         </Text>
         <Text color={theme.colors.headline} fontSize="38px">
-          Starting Soon!
+          Starting Now!
         </Text>
       </Flex>
     )
