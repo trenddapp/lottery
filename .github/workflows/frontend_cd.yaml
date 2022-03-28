@@ -5,30 +5,20 @@ on:
     - main
     paths:
     - frontend/**
+  workflow_dispatch:
 jobs:
   nextjs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Setup
-      uses: actions/setup-node@v2
-      with:
-        node-version: 17.7.1
-    - name: Install Dependencies
-      run: npm ci
-      working-directory: frontend
-    - name: Build
-      run: npm run export
-      working-directory: frontend
-    - name: Lint
-      run: npm run lint
-      working-directory: frontend
     - name: Deploy
-      uses: nwtgck/actions-netlify@v1.2
+      uses: akhileshns/heroku-deploy@v3.12.12
       with:
-        production-deploy: true
-        publish-dir: frontend/out
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        appdir: frontend
+        branch: main
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: dappz-lottery-frontend
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
+        procfile: "web: npm start"
+        region: eu
