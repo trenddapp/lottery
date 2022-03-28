@@ -6,7 +6,8 @@ compiler:
   solc:
     remappings:
       - '@chainlink=smartcontractkit/chainlink-brownie-contracts@0.4.0'
-      - '@openzeppelin=OpenZeppelin'
+      - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.5.0'
+      - '@openzeppelinUpgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0'
 dotenv: .env
 networks:
   default: development
