@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 import "@chainlink/contracts/src/v0.8/dev/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
-import "@openzeppelin/openzeppelin-contracts-upgradeable@4.5.0/contracts/access/OwnableUpgradeable.sol";
-import "@openzeppelin/openzeppelin-contracts-upgradeable@4.5.0/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelinUpgradeable/contracts/access/OwnableUpgradeable.sol";
+import "@openzeppelinUpgradeable/contracts/proxy/utils/Initializable.sol";
 
 contract Lottery is
     Initializable,
