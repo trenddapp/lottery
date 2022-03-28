@@ -16,7 +16,7 @@ No matter what programming language you are using, in order to make a request to
 |User's Priavte Key    |A private key that is used to sign/verify the write requests(transactions).                        |
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome :) For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
