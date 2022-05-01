@@ -56,7 +56,7 @@ const HeroPrize = () => {
         ${prize === 0 ? '0.00' : prize.toString()}
       </Text>
       <Text color={theme.colors.headline} fontSize="28px">
-        in prizes!
+        in prizes...
       </Text>
     </Flex>
   )
