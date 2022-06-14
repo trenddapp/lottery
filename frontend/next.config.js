@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: '/auction',
+  assetPrefix: '/lottery',
   reactStrictMode: true,
   rewrites() {
-    return [{ source: '/auction/_next/:path*', destination: '/_next/:path*' }]
+    return [{ source: '/lottery/_next/:path*', destination: '/_next/:path*' }]
   },
 }
 
