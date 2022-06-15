@@ -1,6 +1,0 @@
-clients:
-  coinMarketCap:
-    apiKey: change-me
-
-http:
-  port: 9080
