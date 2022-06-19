@@ -18,7 +18,7 @@ jobs:
         appdir: frontend
         branch: main
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: dappz-lottery
+        heroku_app_name: trenddapp-lottery
         heroku_email: ${{secrets.HEROKU_EMAIL}}
         procfile: "web: npm start"
         region: eu
