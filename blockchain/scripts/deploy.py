@@ -5,11 +5,11 @@ ACCOUNT = get_account()
 
 
 def deploy_lottery():
-    upgradeable_dappz_lottery = Lottery.deploy(
+    upgradeable_lottery = Lottery.deploy(
         {"from": ACCOUNT},
         publish_source=True,
     )
-    return upgradeable_dappz_lottery
+    return upgradeable_lottery
 
 
 def deploy_proxy_admin():
