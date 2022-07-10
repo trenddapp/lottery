@@ -122,10 +122,10 @@ contract Lottery is
         uint8 _winnerPercentage,
         uint256 _lotteryDuration
     ) external override ifNotStarted onlyOwner {
+        lotteryStatus = Status.OPEN;
         costPerTicket = _ticketPrice;
         winnerPercentage = _winnerPercentage;
         lotteryDuration = _lotteryDuration;
-        lotteryStatus = Status.OPEN;
         startingTimestamp = block.timestamp;
         emit OpenedLottery(lotteryID);
     }
@@ -155,8 +155,10 @@ contract Lottery is
         onlyWinnerOrOwner
     {
         _addLottery();
-        _transferPrize();
+        uint256 winnerPrize_ = (prizePool * winnerPercentage) / 100;
+        address winner_ = winner;
         _reset();
+        _transferPrize(winner_, winnerPrize_);
         emit ClaimedReward(lotteryID);
     }
 
@@ -171,10 +173,10 @@ contract Lottery is
         internal
         override
     {
+        lotteryStatus = Status.COMPLETED;
         randomWords = _randomWords;
         randomResult = randomWords[0];
         winner = participants[randomResult % participants.length];
-        lotteryStatus = Status.COMPLETED;
         emit CompletedLottery(lotteryID);
     }
 
@@ -188,9 +190,8 @@ contract Lottery is
         );
     }
 
-    function _transferPrize() private {
-        uint256 winnerPrize = (prizePool * winnerPercentage) / 100;
-        (bool sent, ) = winner.call{value: winnerPrize}("");
+    function _transferPrize(address _winner, uint256 _winnerPrize) private {
+        (bool sent, ) = _winner.call{value: _winnerPrize}("");
         require(sent, "Failed to send winner prize!");
     }
 
@@ -207,10 +208,10 @@ contract Lottery is
     }
 
     function _reset() private {
+        lotteryStatus = Status.NOT_STARTED;
         closingTimestamp = 0;
         costPerTicket = 0;
         lotteryDuration = 0;
-        lotteryStatus = Status.NOT_STARTED;
         participants = new address payable[](0);
         prizePool = 0;
         randomResult = 0;
