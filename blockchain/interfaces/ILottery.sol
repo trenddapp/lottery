@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-/// @title The interface for the Lottery contract
+/// @title The interface for the lottery contract
 interface ILottery {
-    /// @notice refers to lottery status
+    /// @notice Refers to lottery status
     enum Status {
         NOT_STARTED, // The lottery is not started yet
         OPEN, // The lottery is open for ticket purchases
