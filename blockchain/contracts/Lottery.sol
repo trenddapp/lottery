@@ -36,7 +36,6 @@ contract Lottery is
     uint256 public override prizePool;
     /// @inheritdoc ILottery
     uint256 public override startingTimestamp;
-    uint256 private closingTimestamp;
     /// @inheritdoc ILottery
     address public override winner;
     /// @inheritdoc ILottery
@@ -53,7 +52,6 @@ contract Lottery is
         uint256 prizePool;
         uint256 costPerTicket;
         uint256 startingTimestamp;
-        uint256 closingTimestamp;
         address winner;
         uint256 randomNumber;
     }
@@ -139,11 +137,17 @@ contract Lottery is
 
     /// @inheritdoc ILottery
     function closeLottery() external override canClose onlyOwner {
-        lotteryStatus = Status.CLOSED;
-        closingTimestamp = block.timestamp;
-        _requestRandomWords();
-        emit RequestedRandomWords(requestId);
-        emit ClosedLottery(lotteryID);
+        if (participants.length != 0) {
+            lotteryStatus = Status.CLOSED;
+            _requestRandomWords();
+            emit RequestedRandomWords(requestId);
+            emit ClosedLottery(lotteryID);
+        } else {
+            _addLottery();
+            _reset();
+            emit ClosedLottery(lotteryID);
+            emit CompletedLottery(lotteryID);
+        }
     }
 
     /// @inheritdoc ILottery
@@ -201,7 +205,6 @@ contract Lottery is
             prizePool,
             costPerTicket,
             startingTimestamp,
-            closingTimestamp,
             winner,
             randomResult
         );
@@ -209,7 +212,6 @@ contract Lottery is
 
     function _reset() private {
         lotteryStatus = Status.NOT_STARTED;
-        closingTimestamp = 0;
         costPerTicket = 0;
         lotteryDuration = 0;
         participants = new address payable[](0);
