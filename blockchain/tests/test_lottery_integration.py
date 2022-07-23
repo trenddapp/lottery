@@ -26,6 +26,7 @@ def test_deployment():
 
 def test_hold_a_lottery():
     lottery = Lottery[-1]
+    lottery_id = lottery.lotteryID()
 
     lottery.startLottery(TICKET_PRICE, WINNER_PERCENTAGE,
                          DURATION, {"from": OWNER})
@@ -56,5 +57,26 @@ def test_hold_a_lottery():
     assert lottery.owner() == OWNER
     assert lottery.winner() == ZERO_ADDRESS
     assert lottery.randomResult() == 0
-    assert lottery.allLotteries(0)[1] == TICKET_PRICE  # prize pool
-    assert lottery.allLotteries(0)[5] == OWNER  # winner
+    assert lottery.allLotteries(lottery_id)[1] == TICKET_PRICE  # prize pool
+    assert lottery.allLotteries(lottery_id)[4] == OWNER  # winner
+
+
+def test_hold_a_lottery_without_player():
+    lottery = Lottery[-1]
+    lottery_id = lottery.lotteryID()
+
+    lottery.startLottery(TICKET_PRICE, WINNER_PERCENTAGE,
+                         DURATION, {"from": OWNER})
+
+    assert lottery.lotteryStatus() == 1
+    assert lottery.startingTimestamp() != 0
+
+    time.sleep(DURATION)
+    lottery.closeLottery({"from": OWNER})
+
+    assert lottery.lotteryStatus() == 0
+    assert lottery.owner() == OWNER
+    assert lottery.winner() == ZERO_ADDRESS
+    assert lottery.randomResult() == 0
+    assert lottery.allLotteries(lottery_id)[1] == 0  # prize pool
+    assert lottery.allLotteries(lottery_id)[4] == ZERO_ADDRESS  # winner
