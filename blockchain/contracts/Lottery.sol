@@ -47,6 +47,9 @@ contract Lottery is
     /// @inheritdoc ILottery
     Status public override lotteryStatus = Status.NOT_STARTED;
 
+    // stores the number of tickets for all participants
+    mapping(uint256 => mapping(address => uint8)) public numberOfTickets;
+
     struct LotteryInfo {
         uint256 lotteryID;
         uint256 prizePool;
@@ -133,6 +136,8 @@ contract Lottery is
         require(msg.value == costPerTicket, "Enter a valid price!");
         prizePool += costPerTicket;
         participants.push(payable(msg.sender));
+        numberOfTickets[lotteryID][msg.sender] += 1;
+        emit BoughtTicket(lotteryID, msg.sender);
     }
 
     /// @inheritdoc ILottery
