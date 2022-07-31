@@ -1,11 +1,9 @@
 # Lottery Blockchain
 
-
 ## Lottery contract
 
 A verified version of the Lottery contract on the Rinkeby network:
-https://rinkeby.etherscan.io/address/0xdE500547032291F1ad9b17cfCB6123AF37FFA836
-
+https://rinkeby.etherscan.io/address/0xe10a158A57D7900C7682F47157d3AC40Db097803
 
 ## Proxy contract
 
