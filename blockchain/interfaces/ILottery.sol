@@ -11,6 +11,11 @@ interface ILottery {
         COMPLETED // The lottery has been closed and the winner picked
     }
 
+    /// @notice Emitted when a ticket is bought
+    /// @param lotteryId The ID of the lottery
+    /// @param player The address of the ticket buyer
+    event BoughtTicket(uint256 lotteryId, address player);
+
     /// @notice Emitted when the prize is claimed
     /// @param lotteryId The ID of the lottery
     event ClaimedReward(uint256 lotteryId);
