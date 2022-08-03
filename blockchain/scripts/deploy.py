@@ -42,4 +42,3 @@ def main():
 
     proxy = deploy_proxy(lottery, proxy_admin)
     print(f"Proxy deployed to {proxy} !")
-    proxy.initialize({"from": ACCOUNT})

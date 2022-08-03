@@ -77,6 +77,7 @@ interface ILottery {
             uint256,
             uint256,
             address,
+            uint256,
             uint256
         );
 
