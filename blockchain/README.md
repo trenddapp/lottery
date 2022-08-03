@@ -3,7 +3,7 @@
 ## Lottery contract
 
 A verified version of the Lottery contract on the Rinkeby network:
-https://rinkeby.etherscan.io/address/0xe10a158A57D7900C7682F47157d3AC40Db097803
+https://rinkeby.etherscan.io/address/0x76d7182f6d4167740C15Fb2fbBAaDEdc9a957291
 
 ## Proxy contract
 
