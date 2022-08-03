@@ -57,6 +57,7 @@ contract Lottery is
         uint256 startingTimestamp;
         address winner;
         uint256 randomNumber;
+        uint256 lotteryDuration;
     }
     /// @inheritdoc ILottery
     mapping(uint256 => LotteryInfo) public override allLotteries;
@@ -211,7 +212,8 @@ contract Lottery is
             costPerTicket,
             startingTimestamp,
             winner,
-            randomResult
+            randomResult,
+            lotteryDuration
         );
     }
 
