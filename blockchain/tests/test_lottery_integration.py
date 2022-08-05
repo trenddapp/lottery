@@ -19,9 +19,9 @@ def test_deployment():
 
     assert lottery.owner() == OWNER
 
-    assert lottery.winner() == ZERO_ADDRESS
+    assert lottery.winner() == lottery.address
 
-    assert lottery.randomResult() == 0
+    assert lottery.randomResult() == 1
 
 
 def test_hold_a_lottery():
@@ -32,7 +32,7 @@ def test_hold_a_lottery():
                          DURATION, {"from": OWNER})
 
     assert lottery.lotteryStatus() == 1
-    assert lottery.startingTimestamp() != 0
+    assert lottery.startingTimestamp() != 1
 
     lottery.buyTicket({"from": OWNER, "value": TICKET_PRICE})
 
@@ -47,7 +47,7 @@ def test_hold_a_lottery():
     time.sleep(DURATION)  # wait for chainlink
 
     assert lottery.lotteryStatus() == 3
-    assert lottery.randomResult() != 0
+    assert lottery.randomResult() != 1
     assert lottery.winner() == OWNER
 
     # contract address has been added to the chainlink subscription by me (https://vrf.chain.link)
@@ -55,8 +55,8 @@ def test_hold_a_lottery():
 
     assert lottery.lotteryStatus() == 0
     assert lottery.owner() == OWNER
-    assert lottery.winner() == ZERO_ADDRESS
-    assert lottery.randomResult() == 0
+    assert lottery.winner() == lottery.address
+    assert lottery.randomResult() == 1
     assert lottery.allLotteries(lottery_id)[1] == TICKET_PRICE  # prize pool
     assert lottery.allLotteries(lottery_id)[4] == OWNER  # winner
 
@@ -69,14 +69,14 @@ def test_hold_a_lottery_without_player():
                          DURATION, {"from": OWNER})
 
     assert lottery.lotteryStatus() == 1
-    assert lottery.startingTimestamp() != 0
+    assert lottery.startingTimestamp() != 1
 
     time.sleep(DURATION)
     lottery.closeLottery({"from": OWNER})
 
     assert lottery.lotteryStatus() == 0
     assert lottery.owner() == OWNER
-    assert lottery.winner() == ZERO_ADDRESS
-    assert lottery.randomResult() == 0
-    assert lottery.allLotteries(lottery_id)[1] == 0  # prize pool
-    assert lottery.allLotteries(lottery_id)[4] == ZERO_ADDRESS  # winner
+    assert lottery.winner() == lottery.address
+    assert lottery.randomResult() == 1
+    assert lottery.allLotteries(lottery_id)[1] == 1  # prize pool
+    assert lottery.allLotteries(lottery_id)[4] == lottery.address  # winner

@@ -23,32 +23,31 @@ contract Lottery is
     uint32 constant CALLBACK_GAS_LIMIT = 1000000;
     uint32 constant NUM_WORDS = 1;
     uint16 constant REQUEST_CONFIRMATIONS = 3;
-    uint256[] randomWords;
-    uint256 requestId;
+    uint256 requestId = 1;
 
     /// @inheritdoc ILottery
-    uint256 public override lotteryID;
+    uint256 public override lotteryID = 1;
     /// @inheritdoc ILottery
-    address[] public override participants;
+    address[] public override participants = [address(1)];
     /// @inheritdoc ILottery
-    uint256 public override costPerTicket;
+    uint256 public override costPerTicket = 1;
     /// @inheritdoc ILottery
-    uint256 public override prizePool;
+    uint256 public override prizePool = 1;
     /// @inheritdoc ILottery
-    uint256 public override startingTimestamp;
+    uint256 public override startingTimestamp = 1;
     /// @inheritdoc ILottery
-    address public override winner;
+    address public override winner = address(1);
     /// @inheritdoc ILottery
-    uint256 public override randomResult;
+    uint256 public override randomResult = 1;
     /// @inheritdoc ILottery
-    uint256 public override lotteryDuration;
+    uint256 public override lotteryDuration = 1;
     /// @inheritdoc ILottery
-    uint8 public override winnerPercentage;
+    uint8 public override winnerPercentage = 1;
     /// @inheritdoc ILottery
     Status public override lotteryStatus = Status.NOT_STARTED;
 
     // stores the number of tickets for all participants
-    mapping(uint256 => mapping(address => uint8)) public numberOfTickets;
+    mapping(uint256 => mapping(address => uint256)) public numberOfTickets;
 
     struct LotteryInfo {
         uint256 lotteryID;
@@ -71,7 +70,7 @@ contract Lottery is
             block.timestamp >= startingTimestamp + lotteryDuration,
             "Time is not over!"
         );
-        require(randomResult == 0, "The lottery is already closed!"); // to prevent re-closing
+        require(randomResult == 1, "The lottery is already closed!"); // to prevent re-closing
         _;
     }
 
@@ -109,7 +108,7 @@ contract Lottery is
     }
 
     modifier randomNumberGenerated() {
-        require(winner != address(0), "The winner has not been selected!");
+        require(winner != address(1), "The winner has not been selected!");
         _;
     }
 
@@ -134,25 +133,33 @@ contract Lottery is
 
     /// @inheritdoc ILottery
     function buyTicket() external payable override ifOpen {
+        uint256 ticketPrice = costPerTicket;
+        uint256 lotteryId = lotteryID;
         require(msg.value == costPerTicket, "Enter a valid price!");
-        prizePool += costPerTicket;
-        participants.push(payable(msg.sender));
-        numberOfTickets[lotteryID][msg.sender] += 1;
-        emit BoughtTicket(lotteryID, msg.sender);
+        // first buyer
+        if (prizePool == 1) {
+            prizePool = ticketPrice;
+            participants[0] = msg.sender;
+        } else {
+            prizePool += ticketPrice;
+            participants.push(msg.sender);
+        }
+        numberOfTickets[lotteryId][msg.sender] += 1;
+        emit BoughtTicket(lotteryId, msg.sender);
     }
 
     /// @inheritdoc ILottery
     function closeLottery() external override canClose onlyOwner {
-        if (participants.length != 0) {
-            lotteryStatus = Status.CLOSED;
-            _requestRandomWords();
-            emit RequestedRandomWords(requestId);
-            emit ClosedLottery(lotteryID);
-        } else {
+        if (participants[0] == address(1)) {
             _addLottery();
             _reset();
             emit ClosedLottery(lotteryID);
             emit CompletedLottery(lotteryID);
+        } else {
+            lotteryStatus = Status.CLOSED;
+            _requestRandomWords();
+            emit RequestedRandomWords(requestId);
+            emit ClosedLottery(lotteryID);
         }
     }
 
@@ -174,7 +181,7 @@ contract Lottery is
 
     /// @inheritdoc ILottery
     function withdrawEth() external override onlyOwner {
-        require(prizePool == 0, "The prizePool is not empty!");
+        require(prizePool == 1, "The prizePool is not empty!");
         (bool sent, ) = msg.sender.call{value: address(this).balance}("");
         require(sent, "Failed to withdraw!");
     }
@@ -184,8 +191,7 @@ contract Lottery is
         override
     {
         lotteryStatus = Status.COMPLETED;
-        randomWords = _randomWords;
-        randomResult = randomWords[0];
+        randomResult = _randomWords[0];
         winner = participants[randomResult % participants.length];
         emit CompletedLottery(lotteryID);
     }
@@ -219,12 +225,12 @@ contract Lottery is
 
     function _reset() private {
         lotteryStatus = Status.NOT_STARTED;
-        costPerTicket = 0;
-        lotteryDuration = 0;
-        participants = new address payable[](0);
-        prizePool = 0;
-        randomResult = 0;
-        startingTimestamp = 0;
-        winner = payable(address(0));
+        costPerTicket = 1;
+        lotteryDuration = 1;
+        participants = [address(1)];
+        prizePool = 1;
+        randomResult = 1;
+        startingTimestamp = 1;
+        winner = address(1);
     }
 }
