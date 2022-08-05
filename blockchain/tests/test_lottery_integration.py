@@ -7,7 +7,7 @@ TICKET_PRICE = 1000000000000000  # 0.01 ether
 WINNER_PERCENTAGE = 80
 DURATION = 60
 OWNER = get_account()
-ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+ADDRESS_ONE = "0x0000000000000000000000000000000000000001"
 
 
 def test_deployment():
@@ -19,7 +19,7 @@ def test_deployment():
 
     assert lottery.owner() == OWNER
 
-    assert lottery.winner() == lottery.address
+    assert lottery.winner() == ADDRESS_ONE
 
     assert lottery.randomResult() == 1
 
@@ -55,7 +55,7 @@ def test_hold_a_lottery():
 
     assert lottery.lotteryStatus() == 0
     assert lottery.owner() == OWNER
-    assert lottery.winner() == lottery.address
+    assert lottery.winner() == ADDRESS_ONE
     assert lottery.randomResult() == 1
     assert lottery.allLotteries(lottery_id)[1] == TICKET_PRICE  # prize pool
     assert lottery.allLotteries(lottery_id)[4] == OWNER  # winner
@@ -76,7 +76,7 @@ def test_hold_a_lottery_without_player():
 
     assert lottery.lotteryStatus() == 0
     assert lottery.owner() == OWNER
-    assert lottery.winner() == lottery.address
+    assert lottery.winner() == ADDRESS_ONE
     assert lottery.randomResult() == 1
     assert lottery.allLotteries(lottery_id)[1] == 1  # prize pool
-    assert lottery.allLotteries(lottery_id)[4] == lottery.address  # winner
+    assert lottery.allLotteries(lottery_id)[4] == ADDRESS_ONE  # winner
