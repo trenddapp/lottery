@@ -14,10 +14,6 @@ compiler:
 dotenv: .env
 networks:
   default: development
-  mainnet:
-    verify: True
-  rinkeby:
-    verify: True
   development:
     base_fee: 250000000000000000 # it's the premium. it costs 0.25 LINK per request.
     gas_price_link: 1000000000 # calculated value based on the gas price of the chain | LINK pre gas
