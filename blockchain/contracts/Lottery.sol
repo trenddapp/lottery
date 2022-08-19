@@ -12,15 +12,15 @@ contract Lottery is
     ILottery,
     Initializable,
     OwnableUpgradeable,
-    VRFConsumerBaseV2(0x6168499c0cFfCaCD319c818142124B7A15E857ab)
+    VRFConsumerBaseV2(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D)
 {
-    // Rinkeby testnet configurations
+    // Goerli testnet configurations
     VRFCoordinatorV2Interface constant COORDINATOR =
-        VRFCoordinatorV2Interface(0x6168499c0cFfCaCD319c818142124B7A15E857ab);
+        VRFCoordinatorV2Interface(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D);
     bytes32 constant KEY_HASH =
-        0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
-    uint64 constant SUBSCRIPTION_ID = 247; // https://vrf.chain.link
-    uint32 constant CALLBACK_GAS_LIMIT = 1000000;
+        0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
+    uint64 constant SUBSCRIPTION_ID = 44; // https://vrf.chain.link
+    uint32 constant CALLBACK_GAS_LIMIT = 100000;
     uint32 constant NUM_WORDS = 1;
     uint16 constant REQUEST_CONFIRMATIONS = 3;
     uint256 requestId = 1;
@@ -128,7 +128,12 @@ contract Lottery is
         winnerPercentage = _winnerPercentage;
         lotteryDuration = _lotteryDuration;
         startingTimestamp = block.timestamp;
-        emit OpenedLottery(lotteryID);
+        emit OpenedLottery(
+            lotteryID,
+            _ticketPrice,
+            startingTimestamp,
+            _lotteryDuration
+        );
     }
 
     /// @inheritdoc ILottery
@@ -153,13 +158,13 @@ contract Lottery is
         if (participants[0] == address(1)) {
             _addLottery();
             _reset();
-            emit ClosedLottery(lotteryID);
-            emit CompletedLottery(lotteryID);
+            emit ClosedLottery(lotteryID, 0);
+            emit CompletedLottery(lotteryID, 0, address(0));
         } else {
             lotteryStatus = Status.CLOSED;
             _requestRandomWords();
             emit RequestedRandomWords(requestId);
-            emit ClosedLottery(lotteryID);
+            emit ClosedLottery(lotteryID, prizePool);
         }
     }
 
@@ -176,7 +181,7 @@ contract Lottery is
         address winner_ = winner;
         _reset();
         _transferPrize(winner_, winnerPrize_);
-        emit ClaimedReward(lotteryID);
+        emit ClaimedReward(lotteryID, msg.sender);
     }
 
     /// @inheritdoc ILottery
@@ -193,7 +198,7 @@ contract Lottery is
         lotteryStatus = Status.COMPLETED;
         randomResult = _randomWords[0];
         winner = participants[randomResult % participants.length];
-        emit CompletedLottery(lotteryID);
+        emit CompletedLottery(lotteryID, randomResult, winner);
     }
 
     function _requestRandomWords() private onlyOwner {

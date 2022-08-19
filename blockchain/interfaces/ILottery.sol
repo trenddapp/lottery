@@ -18,19 +18,29 @@ interface ILottery {
 
     /// @notice Emitted when the prize is claimed
     /// @param lotteryId The ID of the lottery
-    event ClaimedReward(uint256 lotteryId);
+    /// @param claimer Owner or winner
+    event ClaimedReward(uint256 lotteryId, address claimer);
 
     /// @notice Emitted when the lottery is closed
     /// @param lotteryId The ID of the lottery
-    event ClosedLottery(uint256 lotteryId);
+    event ClosedLottery(uint256 lotteryId, uint256 prizePot);
 
     /// @notice Emitted when the lottery is completed
     /// @param lotteryId The ID of the lottery
-    event CompletedLottery(uint256 lotteryId);
+    event CompletedLottery(
+        uint256 lotteryId,
+        uint256 randomNumber,
+        address winner
+    );
 
     /// @notice Emitted when a lottery is started
     /// @param lotteryId The ID of the lottery
-    event OpenedLottery(uint256 lotteryId);
+    event OpenedLottery(
+        uint256 lotteryId,
+        uint256 ticketPrice,
+        uint256 startTime,
+        uint256 duration
+    );
 
     /// @notice Emitted when a random number is requested
     /// @param requestId The ID of the random number request
