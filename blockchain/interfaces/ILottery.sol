@@ -17,9 +17,9 @@ interface ILottery {
     event BoughtTicket(uint256 lotteryId, address player);
 
     /// @notice Emitted when the prize is claimed
-    /// @param lotteryId The ID of the lottery
+    // / @param lotteryId The ID of the lottery
     /// @param claimer Owner or winner
-    event ClaimedReward(uint256 lotteryId, address claimer);
+    event ClaimedReward(address claimer);
 
     /// @notice Emitted when the lottery is closed
     /// @param lotteryId The ID of the lottery
@@ -45,6 +45,10 @@ interface ILottery {
     /// @notice Emitted when a random number is requested
     /// @param requestId The ID of the random number request
     event RequestedRandomWords(uint256 requestId);
+
+    /// @notice Emitted when the lottery info is reset
+    /// @param lotteryId The ID of the lottery
+    event ResetLottery(uint256 lotteryId);
 
     /// @return The current lottery id
     function lotteryID() external view returns (uint256);
@@ -110,6 +114,9 @@ interface ILottery {
 
     /// @notice Sends the prize of the closed lottery to the winner
     function claimReward() external;
+
+    /// @notice Resets the lottery info
+    function resetLottery() external;
 
     /// @notice Sends the rest of the prize pots to the owner
     function withdrawEth() external;

@@ -8,9 +8,9 @@ compiler:
       enabled: True
       runs: 1000000
     remappings:
-      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@0.4.2'
-      - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.5.0'
-      - '@openzeppelinUpgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0'
+      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@0.5.1'
+      - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.8.0'
+      - '@openzeppelinUpgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.8.0'
 dotenv: .env
 networks:
   default: development
