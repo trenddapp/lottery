@@ -14,31 +14,39 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
     uint32 immutable callbackGasLimit;
     uint32 constant NUM_WORDS = 1;
     uint16 constant REQUEST_CONFIRMATIONS = 3;
-    uint256 requestId = 1;
+    uint256 requestId;
 
     /// @inheritdoc ILottery
-    uint256 public override lotteryID = 1;
+    uint256 public override lotteryID;
     /// @inheritdoc ILottery
-    address[] public override participants = [address(1)];
+    address[] public override participants;
     /// @inheritdoc ILottery
-    uint256 public override costPerTicket = 1;
+    uint256 public override costPerTicket;
     /// @inheritdoc ILottery
-    uint256 public override prizePool = 1;
+    uint256 public override prizePool;
     /// @inheritdoc ILottery
-    uint256 public override startingTimestamp = 1;
+    uint256 public override startingTimestamp;
     /// @inheritdoc ILottery
-    address public override winner = address(1);
+    address public override winner;
     /// @inheritdoc ILottery
-    uint256 public override randomResult = 1;
+    uint256 public override randomResult;
     /// @inheritdoc ILottery
-    uint256 public override lotteryDuration = 1;
+    uint256 public override lotteryDuration;
     /// @inheritdoc ILottery
-    uint8 public override winnerPercentage = 1;
+    uint8 public override winnerPercentage;
     /// @inheritdoc ILottery
     Status public override lotteryStatus = Status.NOT_STARTED;
 
     // stores the number of tickets for all participants
     mapping(uint256 => mapping(address => uint256)) public numberOfTickets;
+
+    // stores the prize amount of the winners
+    mapping(address => uint256) private prizeAmountOfWinners;
+
+    // stores the amount of the admin for all lotteries
+    uint256 private adminAmount;
+    // stores the amount of the currnet lottery winner
+    uint256 private winnerAmount;
 
     struct LotteryInfo {
         uint256 lotteryID;
@@ -61,7 +69,7 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
             block.timestamp >= startingTimestamp + lotteryDuration,
             "Time is not over!"
         );
-        require(randomResult == 1, "The lottery is already closed!"); // to prevent re-closing
+        require(randomResult == 0, "The lottery is already closed!"); // to prevent re-closing
         _;
     }
 
@@ -90,16 +98,8 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
         _;
     }
 
-    modifier onlyWinnerOrOwner() {
-        require(
-            msg.sender == winner || msg.sender == owner(),
-            "Only the winner can claim reward!"
-        );
-        _;
-    }
-
     modifier randomNumberGenerated() {
-        require(winner != address(1), "The winner has not been selected!");
+        require(winner != address(0), "The winner has not been selected!");
         _;
     }
 
@@ -113,6 +113,55 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
         subscriptionId = _subscriptionId;
         keyHash = _keyHash;
         callbackGasLimit = _callbackGasLimit;
+    }
+
+    /// @inheritdoc ILottery
+    function buyTicket() external payable override ifOpen {
+        require(msg.value == costPerTicket, "Enter a valid price!");
+        prizePool += costPerTicket;
+        participants.push(msg.sender);
+        numberOfTickets[lotteryID][msg.sender]++;
+        emit BoughtTicket(lotteryID, msg.sender);
+    }
+
+    /// @inheritdoc ILottery
+    function claimReward() external override {
+        uint256 amount = prizeAmountOfWinners[msg.sender];
+        require(amount > 0, "You are not a winner!");
+        prizeAmountOfWinners[msg.sender] = 0;
+        _transferPrize(amount);
+        emit ClaimedReward(msg.sender);
+    }
+
+    /// @inheritdoc ILottery
+    function closeLottery() external override canClose onlyOwner {
+        if (participants.length == 0) {
+            _addLottery();
+            _reset();
+            emit ClosedLottery(lotteryID, 0);
+            emit CompletedLottery(lotteryID, 0, address(0));
+            emit ResetLottery(lotteryID);
+        } else {
+            lotteryStatus = Status.CLOSED;
+            winnerAmount = _calculateWinnerAmount();
+            _increaseAdminAmount(prizePool - winnerAmount);
+            _requestRandomWords();
+            emit RequestedRandomWords(requestId);
+            emit ClosedLottery(lotteryID, prizePool);
+        }
+    }
+
+    /// @inheritdoc ILottery
+    function resetLottery()
+        external
+        override
+        ifCompleted
+        randomNumberGenerated
+        onlyOwner
+    {
+        _addLottery();
+        _reset();
+        emit ResetLottery(lotteryID);
     }
 
     /// @inheritdoc ILottery
@@ -135,57 +184,11 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
     }
 
     /// @inheritdoc ILottery
-    function buyTicket() external payable override ifOpen {
-        uint256 ticketPrice = costPerTicket;
-        uint256 lotteryId = lotteryID;
-        require(msg.value == costPerTicket, "Enter a valid price!");
-        // first buyer
-        if (prizePool == 1) {
-            prizePool = ticketPrice;
-            participants[0] = msg.sender;
-        } else {
-            prizePool += ticketPrice;
-            participants.push(msg.sender);
-        }
-        numberOfTickets[lotteryId][msg.sender] += 1;
-        emit BoughtTicket(lotteryId, msg.sender);
-    }
-
-    /// @inheritdoc ILottery
-    function closeLottery() external override canClose onlyOwner {
-        if (participants[0] == address(1)) {
-            _addLottery();
-            _reset();
-            emit ClosedLottery(lotteryID, 0);
-            emit CompletedLottery(lotteryID, 0, address(0));
-        } else {
-            lotteryStatus = Status.CLOSED;
-            _requestRandomWords();
-            emit RequestedRandomWords(requestId);
-            emit ClosedLottery(lotteryID, prizePool);
-        }
-    }
-
-    /// @inheritdoc ILottery
-    function claimReward()
-        external
-        override
-        ifCompleted
-        randomNumberGenerated
-        onlyWinnerOrOwner
-    {
-        _addLottery();
-        uint256 winnerPrize_ = (prizePool * winnerPercentage) / 100;
-        address winner_ = winner;
-        _reset();
-        _transferPrize(winner_, winnerPrize_);
-        emit ClaimedReward(lotteryID, msg.sender);
-    }
-
-    /// @inheritdoc ILottery
     function withdrawEth() external override onlyOwner {
-        require(prizePool == 1, "The prizePool is not empty!");
-        (bool sent, ) = msg.sender.call{value: address(this).balance}("");
+        uint256 amount = adminAmount;
+        require(amount > 0, "The admin amount is zero!");
+        adminAmount = 0;
+        (bool sent, ) = msg.sender.call{value: amount}("");
         require(sent, "Failed to withdraw!");
     }
 
@@ -195,23 +198,9 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
     {
         lotteryStatus = Status.COMPLETED;
         randomResult = _randomWords[0];
-        winner = participants[randomResult % participants.length];
+        winner = _findWinner();
+        _setWinnerPrize(winner, winnerAmount);
         emit CompletedLottery(lotteryID, randomResult, winner);
-    }
-
-    function _requestRandomWords() private onlyOwner {
-        requestId = coordinator.requestRandomWords(
-            keyHash,
-            subscriptionId,
-            REQUEST_CONFIRMATIONS,
-            callbackGasLimit,
-            NUM_WORDS
-        );
-    }
-
-    function _transferPrize(address _winner, uint256 _winnerPrize) private {
-        (bool sent, ) = _winner.call{value: _winnerPrize}("");
-        require(sent, "Failed to send winner prize!");
     }
 
     function _addLottery() private {
@@ -226,14 +215,46 @@ contract LotteryMock is ILottery, Ownable, VRFConsumerBaseV2 {
         );
     }
 
+    function _calculateWinnerAmount() private view returns (uint256) {
+        return (prizePool * winnerPercentage) / 100;
+    }
+
+    function _findWinner() private view returns (address) {
+        return participants[randomResult % participants.length];
+    }
+
+    function _increaseAdminAmount(uint256 amount) private {
+        adminAmount += amount;
+    }
+
     function _reset() private {
         lotteryStatus = Status.NOT_STARTED;
-        costPerTicket = 1;
-        lotteryDuration = 1;
-        participants = [address(1)];
-        prizePool = 1;
-        randomResult = 1;
-        startingTimestamp = 1;
-        winner = address(1);
+        costPerTicket = 0;
+        lotteryDuration = 0;
+        participants = new address[](0);
+        prizePool = 0;
+        randomResult = 0;
+        startingTimestamp = 0;
+        winner = address(0);
+        winnerAmount = 0;
+    }
+
+    function _requestRandomWords() private onlyOwner {
+        requestId = coordinator.requestRandomWords(
+            keyHash,
+            subscriptionId,
+            REQUEST_CONFIRMATIONS,
+            callbackGasLimit,
+            NUM_WORDS
+        );
+    }
+
+    function _setWinnerPrize(address _winner, uint256 _amount) private {
+        prizeAmountOfWinners[_winner] = _amount;
+    }
+
+    function _transferPrize(uint256 amount) private {
+        (bool sent, ) = msg.sender.call{value: amount}("");
+        require(sent, "Failed to send winner prize!");
     }
 }
