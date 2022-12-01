@@ -12,5 +12,7 @@ A verified version of the LotteryProxy contract on the Goerli network:
 https://goerli.etherscan.io/address/0x5248bC37FB71130F429A6b0010dEC62d51035432
 ## ProxyAdmin contract
 
+We have used Openzeppelin [ProxyAdmin](https://docs.openzeppelin.com/contracts/4.x/api/proxy#ProxyAdmin) in this project.
+
 A verified version of the LotteryProxyAdmin contract on the Goerli network:
 https://goerli.etherscan.io/address/0x2a000490C829A8782Dd68b049775E544019cAEA2
