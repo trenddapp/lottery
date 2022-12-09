@@ -1,3 +1,0 @@
-[submodule "backend"]
-	path = backend
-	url = git@github.com:trenddapp/backend.git

@@ -1,3 +1,5 @@
 # custom
 **/.DS_Store
+**/.next
 **/.vscode/launch.json
+**/node_modules
