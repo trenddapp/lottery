@@ -128,7 +128,7 @@ contract Lottery is
         uint256 amount = prizeAmountOfWinners[payee];
         require(amount > 0, "You are not a winner!");
         prizeAmountOfWinners[payee] = 0;
-        _transferPrize(payee);
+        _transferPrize(amount);
         emit ClaimedReward(payee);
     }
 
@@ -195,10 +195,10 @@ contract Lottery is
         require(sent, "Failed to withdraw!");
     }
 
-    function fulfillRandomWords(uint256, uint256[] memory _randomWords)
-        internal
-        override
-    {
+    function fulfillRandomWords(
+        uint256,
+        uint256[] memory _randomWords
+    ) internal override {
         lotteryStatus = Status.COMPLETED;
         randomResult = _randomWords[0];
         winner = _findWinner();
