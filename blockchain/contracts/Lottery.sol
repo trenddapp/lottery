@@ -115,19 +115,21 @@ contract Lottery is
     /// @inheritdoc ILottery
     function buyTicket() external payable override ifOpen {
         require(msg.value == costPerTicket, "Enter a valid price!");
+        address participant = msg.sender;
         prizePool += costPerTicket;
-        participants.push(msg.sender);
-        numberOfTickets[lotteryID][msg.sender]++;
-        emit BoughtTicket(lotteryID, msg.sender);
+        participants.push(participant);
+        numberOfTickets[lotteryID][participant]++;
+        emit BoughtTicket(lotteryID, participant);
     }
 
     /// @inheritdoc ILottery
     function claimReward() external override {
-        uint256 amount = prizeAmountOfWinners[msg.sender];
+        address payee = msg.sender;
+        uint256 amount = prizeAmountOfWinners[payee];
         require(amount > 0, "You are not a winner!");
-        prizeAmountOfWinners[msg.sender] = 0;
-        _transferPrize(amount);
-        emit ClaimedReward(msg.sender);
+        prizeAmountOfWinners[payee] = 0;
+        _transferPrize(payee);
+        emit ClaimedReward(payee);
     }
 
     /// @inheritdoc ILottery
