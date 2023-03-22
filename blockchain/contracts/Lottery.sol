@@ -14,25 +14,13 @@ contract Lottery is
     OwnableUpgradeable,
     VRFConsumerBaseV2
 {
-    VRFCoordinatorV2Interface public immutable coordinator;
-    bytes32 public immutable keyHash;
-    uint64 public immutable subscriptionId;
-    uint32 public immutable callbackGasLimit;
+    VRFCoordinatorV2Interface immutable coordinator;
+    bytes32 immutable keyHash;
+    uint64 immutable subscriptionId;
+    uint32 immutable callbackGasLimit;
     uint32 constant NUM_WORDS = 1;
     uint16 constant REQUEST_CONFIRMATIONS = 3;
     uint256 requestId = 1;
-
-    constructor(
-        address _vrfCoordinatorV2,
-        uint64 _subscriptionId,
-        bytes32 _keyHash,
-        uint32 _callbackGasLimit
-    ) VRFConsumerBaseV2(_vrfCoordinatorV2) {
-        coordinator = VRFCoordinatorV2Interface(_vrfCoordinatorV2);
-        subscriptionId = _subscriptionId;
-        keyHash = _keyHash;
-        callbackGasLimit = _callbackGasLimit;
-    }
 
     /// @inheritdoc ILottery
     uint256 public override lotteryID;
@@ -119,6 +107,18 @@ contract Lottery is
     modifier randomNumberGenerated() {
         require(winner != address(0), "The winner has not been selected!");
         _;
+    }
+
+    constructor(
+        address _vrfCoordinatorV2,
+        uint64 _subscriptionId,
+        bytes32 _keyHash,
+        uint32 _callbackGasLimit
+    ) VRFConsumerBaseV2(_vrfCoordinatorV2) {
+        coordinator = VRFCoordinatorV2Interface(_vrfCoordinatorV2);
+        subscriptionId = _subscriptionId;
+        keyHash = _keyHash;
+        callbackGasLimit = _callbackGasLimit;
     }
 
     /// @inheritdoc ILottery
