@@ -1,14 +1,21 @@
-from brownie import Lottery, LotteryProxy, LotteryProxyAdmin
+from brownie import config, Lottery, LotteryProxy, LotteryProxyAdmin, network
 from scripts.useful import encode_function_data, get_account
 
 ACCOUNT = get_account()
 
 
 def deploy_lottery():
+    config_network = config["networks"][network.show_active()]
+    vrf = config_network["coordinator"]
+    subscription_id = config_network["subscription_id"]
+    key_hash = config_network["key_hash"]
+    call_back_gas_limit = config_network["call_back_gas_limit"]
+
     upgradeable_lottery = Lottery.deploy(
-        {"from": ACCOUNT},
-        publish_source=True,
+        vrf, subscription_id, key_hash, call_back_gas_limit,
+        {"from": ACCOUNT}, publish_source=True
     )
+
     return upgradeable_lottery
 
 
