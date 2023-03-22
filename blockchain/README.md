@@ -6,7 +6,7 @@ A verified version of the Lottery contract on the Goerli network:
 https://goerli.etherscan.io/address/0x2Ac96827373AFaf5AFc84bEa2A75F846300D0404
 
 A verified version of the Lottery contract on the BSC test network:
-https://testnet.bscscan.com/address/0x6006566Ce51A5fB5C7DB9DC2421D5609330b1510
+https://testnet.bscscan.com/address/0x889bCfaF23b7B140804D06FC43e8A3f3852812df
 
 ## Proxy contract
 
@@ -16,7 +16,7 @@ A verified version of the LotteryProxy contract on the Goerli network:
 https://goerli.etherscan.io/address/0x5248bC37FB71130F429A6b0010dEC62d51035432
 
 A verified version of the LotteryProxy contract on the BSC test network:
-https://testnet.bscscan.com/address/0x68A7Ec1b63f453768b301e825e98BD0449c4dB09
+https://testnet.bscscan.com/address/0x1c10e741146C7388A9C845aB3432FD0D64046696
 
 ## ProxyAdmin contract
 
@@ -26,4 +26,4 @@ A verified version of the LotteryProxyAdmin contract on the Goerli network:
 https://goerli.etherscan.io/address/0x2a000490C829A8782Dd68b049775E544019cAEA2
 
 A verified version of the LotteryProxyAdmin contract on the BSC test network:
-https://testnet.bscscan.com/address/0x294e1be1Ef5dABf9E6cDE2401D119bEBa0c0c8eF
+https://testnet.bscscan.com/address/0x239F846f792d4d1054cBE5dF1Fd464Ea894cdF4B
