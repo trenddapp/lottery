@@ -12,18 +12,27 @@ contract Lottery is
     ILottery,
     Initializable,
     OwnableUpgradeable,
-    VRFConsumerBaseV2(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D)
+    VRFConsumerBaseV2
 {
-    // Goerli testnet configurations
-    VRFCoordinatorV2Interface constant COORDINATOR =
-        VRFCoordinatorV2Interface(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D);
-    bytes32 constant KEY_HASH =
-        0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
-    uint64 constant SUBSCRIPTION_ID = 44;
-    uint32 constant CALLBACK_GAS_LIMIT = 100000;
+    VRFCoordinatorV2Interface public immutable coordinator;
+    bytes32 public immutable keyHash;
+    uint64 public immutable subscriptionId;
+    uint32 public immutable callbackGasLimit;
     uint32 constant NUM_WORDS = 1;
     uint16 constant REQUEST_CONFIRMATIONS = 3;
     uint256 requestId = 1;
+
+    constructor(
+        address _vrfCoordinatorV2,
+        uint64 _subscriptionId,
+        bytes32 _keyHash,
+        uint32 _callbackGasLimit
+    ) VRFConsumerBaseV2(_vrfCoordinatorV2) {
+        coordinator = VRFCoordinatorV2Interface(_vrfCoordinatorV2);
+        subscriptionId = _subscriptionId;
+        keyHash = _keyHash;
+        callbackGasLimit = _callbackGasLimit;
+    }
 
     /// @inheritdoc ILottery
     uint256 public override lotteryID;
@@ -243,11 +252,11 @@ contract Lottery is
     }
 
     function _requestRandomWords() private onlyOwner {
-        requestId = COORDINATOR.requestRandomWords(
-            KEY_HASH,
-            SUBSCRIPTION_ID,
+        requestId = coordinator.requestRandomWords(
+            keyHash,
+            subscriptionId,
             REQUEST_CONFIRMATIONS,
-            CALLBACK_GAS_LIMIT,
+            callbackGasLimit,
             NUM_WORDS
         );
     }
